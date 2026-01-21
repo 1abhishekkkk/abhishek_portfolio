@@ -37,3 +37,4 @@ build
 tmp_*
 *.tmp
 .vercel
+public/reels/*.mp4
