@@ -24,3 +24,5 @@ public/reels/*.mp4
 tmp_*
 *.tmp
 public/reels/
+*.mp4
+public/reels/*.mp4
