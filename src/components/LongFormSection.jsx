@@ -9,12 +9,18 @@ const LongFormSection = () => {
   const videos = [
     {
       id: 1,
+      src: "/reels/muscleblaze.mp4",
+      title: "MuscleBlaze Campaign",
+      description: "Brand commercial for MuscleBlaze"
+    },
+    {
+      id: 2,
       src: "/reels/oneplus-final.mp4",
       title: "OnePlus Campaign",
       description: "A cinematic journey showcasing the flagship features"
     },
     {
-      id: 2,
+      id: 3,
       src: "/reels/montage-trailer.mp4",
       title: "Montage Trailer",
       description: "An epic compilation of creative moments"
@@ -170,7 +176,7 @@ const LongFormSection = () => {
         </div>
 
         {/* Video Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {videos.map((video) => (
             <VideoCard key={video.id} video={video} />
           ))}
@@ -259,22 +265,6 @@ const LongFormSection = () => {
                     <source src={modalVideo.src} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
-                </div>
-
-                {/* Video info overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-b-3xl">
-                  <h3 className="text-2xl font-bold text-white mb-2">{modalVideo.title}</h3>
-                  <p className="text-neutral-300 mb-2">{modalVideo.description}</p>
-                  <div className="flex items-center gap-4 text-sm text-neutral-300">
-                    <span className="flex items-center gap-1">
-                      <Play size={16} />
-                      Long Form Video
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Volume2 size={16} />
-                      Sound Enabled
-                    </span>
-                  </div>
                 </div>
 
                 {/* Decorative gradient border */}
