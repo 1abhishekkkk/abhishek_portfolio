@@ -11,6 +11,9 @@ import { HeroAvatar, FloatingAvatar } from './Avatar3D';
 import { portfolioConfig, services } from './portfolioData';
 import ShowreelSection from './components/ShowreelSection';
 import LongFormSection from './components/LongFormSection';
+import ColorGradingSection from './components/ColorGradingSection';
+import InstagramFeed from './components/InstagramFeed';
+import InstagramFeedLive from './components/InstagramFeedLive';
 import Toasts from './components/Toasts';
 const App = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -109,6 +112,12 @@ const App = () => {
                 Showreel
               </button>
               <button 
+                onClick={() => scrollToSection('color-grading')} 
+                className="px-4 py-2 text-neutral-300 hover:text-amber-400 hover:bg-amber-500/5 rounded-lg backdrop-blur-sm border border-transparent hover:border-amber-500/20 transition-all duration-300 hover:scale-105 flex items-center gap-1 hover:shadow-lg hover:shadow-amber-500/10"
+              >
+                <Palette size={14} /> Color Grading
+              </button>
+              <button 
                 onClick={() => scrollToSection('services')} 
                 className="px-4 py-2 text-neutral-300 hover:text-white hover:bg-white/5 rounded-lg backdrop-blur-sm border border-transparent hover:border-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-white/5"
               >
@@ -151,6 +160,12 @@ const App = () => {
                   className="w-full text-left py-3 px-4 text-neutral-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
                 >
                   Showreel
+                </button>
+                <button 
+                  onClick={() => { scrollToSection('color-grading'); setIsMenuOpen(false); }}
+                  className="w-full text-left py-3 px-4 text-neutral-300 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all duration-200 flex items-center gap-2"
+                >
+                  <Palette size={14} /> Color Grading
                 </button>
                 <button 
                   onClick={() => { scrollToSection('services'); setIsMenuOpen(false); }}
@@ -253,6 +268,12 @@ const App = () => {
           <section id="showreel" className="py-20">
             <ShowreelSection />
           </section>
+
+          {/* Color Grading Section */}
+          <ColorGradingSection />
+
+          {/* Instagram Feed Section - Live */}
+          <InstagramFeedLive />
 
           {/* Long Form Content Section */}
           <section id="longform" className="py-20">
