@@ -6,47 +6,49 @@ import { Play, Pause, Volume2, VolumeX, X, Maximize2 } from 'lucide-react';
 const reels = [
   { 
     id: 1, 
-    src: "/reels/fuse-bts-final.mp4", 
-    title: "Fuse BTS Final",
-    fallback: "https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-neon-light-32297-large.mp4"
+    src: "/reels/shreyanka-x-duroflex.mp4", 
+    title: "Shreyanka x Duroflex",
   },
   { 
     id: 2, 
-    src: "/reels/realme-15pro-launch-new.mp4", 
-    title: "Realme 15 Pro Launch Event",
-    fallback: "https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-beach-5016-large.mp4"
+    src: "/reels/fuse-bangalore.mp4", 
+    title: "Fuse Bangalore",
   },
   { 
     id: 3, 
-    src: "/reels/honor-brand.mp4", 
-    title: "Honor Brand Commercial",
-    fallback: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4"
+    src: "/reels/fuse-bts-final.mp4", 
+    title: "Fuse BTS Final",
   },
   { 
     id: 4, 
-    src: "/reels/realme-11pro.mp4", 
-    title: "Realme 11 Pro",
-    fallback: "https://assets.mixkit.co/videos/preview/mixkit-coffee-beans-falling-slowly-41573-large.mp4"
+    src: "/reels/realme-15pro-launch-new.mp4", 
+    title: "Realme 15 Pro Launch Event",
   },
   { 
     id: 5, 
-    src: "/reels/fashion-gurav.mp4", 
-    title: "Fashion Commercial",
-    fallback: "https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-neon-light-32297-large.mp4"
+    src: "/reels/honor-brand.mp4", 
+    title: "Honor Brand Commercial",
   },
   { 
     id: 6, 
-    src: "/reels/realme-16pro-plus.mp4", 
-    title: "Realme 16 Pro+",
-    fallback: "https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-beach-5016-large.mp4"
+    src: "/reels/realme-11pro.mp4", 
+    title: "Realme 11 Pro",
   },
   { 
     id: 7, 
+    src: "/reels/fashion-gurav.mp4", 
+    title: "Fashion Commercial",
+  },
+  { 
+    id: 8, 
+    src: "/reels/realme-16pro-plus.mp4", 
+    title: "Realme 16 Pro+",
+  },
+  { 
+    id: 9, 
     src: "/reels/realme-16pro-plus-launch.mp4", 
     title: "Realme 16 Pro+ Launch",
-    fallback: "https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-beach-5016-large.mp4"
   }
-
 ];
 
 // Individual Reel Card Component

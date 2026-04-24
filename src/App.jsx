@@ -6,7 +6,9 @@ import {
   Sparkles, Clapperboard, Lightbulb, Smartphone,
   Phone, MessageCircle, Pause, Volume2, VolumeX
 } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
 import ParticleBackground from './ParticleBackground';
+import VideoBackground from './components/VideoBackground';
 import { HeroAvatar, FloatingAvatar } from './Avatar3D';
 import { portfolioConfig, services } from './portfolioData';
 import ShowreelSection from './components/ShowreelSection';
@@ -76,69 +78,36 @@ const App = () => {
 
   return (
     <div className="relative min-h-screen bg-neutral-950 text-white font-sans selection:bg-amber-500 selection:text-black">
-      {/* Background with 3D effect */}
+      {/* Global Particle Background */}
       <ParticleBackground />
       
       {/* Main Content */}
       <div className="relative z-10">
         {/* Navigation */}
-        <nav className={`fixed w-full z-50 transition-all duration-500 ${
+        <nav className={`fixed w-full z-50 transition-all duration-700 ${
           scrolled 
-            ? 'bg-white/5 backdrop-blur-xl border-b border-white/10 py-4 shadow-lg shadow-black/10' 
-            : 'bg-white/3 backdrop-blur-md py-6'
+            ? 'bg-black/40 backdrop-blur-xl border-b border-white/5 py-4' 
+            : 'bg-transparent py-8'
         }`}>
-          <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <div className="text-2xl font-bold tracking-tighter flex items-center gap-2 group">
-              <div className="w-3 h-3 bg-amber-500 rounded-full animate-pulse group-hover:scale-125 transition-transform duration-300"></div>
+          <div className="max-w-[1800px] mx-auto px-8 md:px-12 flex justify-between items-center">
+            <div className="text-xl font-bold tracking-tighter flex items-center gap-2 group cursor-pointer" onClick={() => scrollToSection('hero')}>
               <span className="group-hover:text-amber-400 transition-colors duration-300">
-                {portfolioConfig?.personal?.name || "ABHI"}
+                {portfolioConfig?.personal?.name.toUpperCase() || "ABHI"}
               </span>
-              <span className="text-neutral-500 group-hover:text-neutral-400 transition-colors duration-300">
-                {portfolioConfig?.personal?.tagline || "CLICKS"}
+              <span className="text-neutral-500 font-light group-hover:text-neutral-300 transition-colors duration-300">
+                {portfolioConfig?.personal?.tagline.toUpperCase() || "CLICKS"}
               </span>
             </div>
             
-            <div className="hidden md:flex gap-2 text-sm font-medium">
-              <button 
-                onClick={() => scrollToSection('hero')} 
-                className="px-4 py-2 text-neutral-300 hover:text-white hover:bg-white/5 rounded-lg backdrop-blur-sm border border-transparent hover:border-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-white/5"
-              >
-                Home
-              </button>
-              <button 
-                onClick={() => scrollToSection('showreel')} 
-                className="px-4 py-2 text-neutral-300 hover:text-white hover:bg-white/5 rounded-lg backdrop-blur-sm border border-transparent hover:border-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-white/5"
-              >
-                Showreel
-              </button>
-              <button 
-                onClick={() => scrollToSection('color-grading')} 
-                className="px-4 py-2 text-neutral-300 hover:text-amber-400 hover:bg-amber-500/5 rounded-lg backdrop-blur-sm border border-transparent hover:border-amber-500/20 transition-all duration-300 hover:scale-105 flex items-center gap-1 hover:shadow-lg hover:shadow-amber-500/10"
-              >
-                <Palette size={14} /> Color Grading
-              </button>
-              <button 
-                onClick={() => scrollToSection('services')} 
-                className="px-4 py-2 text-neutral-300 hover:text-white hover:bg-white/5 rounded-lg backdrop-blur-sm border border-transparent hover:border-white/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-white/5"
-              >
-                Services
-              </button>
-              <button 
-                onClick={() => scrollToSection('ai-vision')} 
-                className="px-4 py-2 text-neutral-300 hover:text-amber-400 hover:bg-amber-500/5 rounded-lg backdrop-blur-sm border border-transparent hover:border-amber-500/20 transition-all duration-300 hover:scale-105 flex items-center gap-1 hover:shadow-lg hover:shadow-amber-500/10"
-              >
-                <Sparkles size={14} className="animate-pulse"/> AI Vision
-              </button>
-              <button 
-                onClick={() => scrollToSection('contact')} 
-                className="px-5 py-2 bg-white/80 text-black rounded-full hover:bg-white/90 hover:scale-105 transition-all duration-300 font-semibold backdrop-blur-sm border border-white/10 hover:shadow-lg hover:shadow-white/20"
-              >
-                Let's Talk
-              </button>
+            <div className="hidden md:flex gap-12 sans-minimal">
+              <button onClick={() => scrollToSection('showreel')} className="hover:text-amber-400 transition-colors">Works</button>
+              <button onClick={() => scrollToSection('services')} className="hover:text-amber-400 transition-colors">Services</button>
+              <button onClick={() => scrollToSection('color-grading')} className="hover:text-amber-400 transition-colors">Coloring</button>
+              <button onClick={() => scrollToSection('contact')} className="text-amber-500 border-b border-amber-500/30 pb-1">Contact</button>
             </div>
             
             <button 
-              className="md:hidden text-white hover:text-amber-400 hover:bg-white/10 p-2 rounded-lg transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-transparent hover:border-white/20" 
+              className="md:hidden text-white p-2" 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X /> : <Menu />}
@@ -147,44 +116,12 @@ const App = () => {
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden absolute top-full left-0 w-full bg-white/8 backdrop-blur-3xl border-t border-white/20 z-40 shadow-xl shadow-black/20">
-              <div className="p-6 space-y-3">
-                <button 
-                  onClick={() => { scrollToSection('hero'); setIsMenuOpen(false); }}
-                  className="w-full text-left py-3 px-4 text-neutral-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
-                >
-                  Home
-                </button>
-                <button 
-                  onClick={() => { scrollToSection('showreel'); setIsMenuOpen(false); }}
-                  className="w-full text-left py-3 px-4 text-neutral-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
-                >
-                  Showreel
-                </button>
-                <button 
-                  onClick={() => { scrollToSection('color-grading'); setIsMenuOpen(false); }}
-                  className="w-full text-left py-3 px-4 text-neutral-300 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all duration-200 flex items-center gap-2"
-                >
-                  <Palette size={14} /> Color Grading
-                </button>
-                <button 
-                  onClick={() => { scrollToSection('services'); setIsMenuOpen(false); }}
-                  className="w-full text-left py-3 px-4 text-neutral-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
-                >
-                  Services
-                </button>
-                <button 
-                  onClick={() => { scrollToSection('ai-vision'); setIsMenuOpen(false); }}
-                  className="w-full text-left py-3 px-4 text-neutral-300 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all duration-200 flex items-center gap-2"
-                >
-                  <Sparkles size={14} className="animate-pulse"/> AI Vision
-                </button>
-                <button 
-                  onClick={() => { scrollToSection('contact'); setIsMenuOpen(false); }}
-                  className="w-full mt-3 py-3 bg-amber-500 text-black rounded-lg font-semibold hover:bg-amber-400 transition-all duration-200"
-                >
-                  Let's Talk
-                </button>
+            <div className="md:hidden absolute top-full left-0 w-full bg-black/90 backdrop-blur-3xl border-t border-white/10 z-40">
+              <div className="p-8 space-y-6 sans-minimal text-center">
+                <button onClick={() => { scrollToSection('showreel'); setIsMenuOpen(false); }} className="block w-full text-lg">Works</button>
+                <button onClick={() => { scrollToSection('services'); setIsMenuOpen(false); }} className="block w-full text-lg">Services</button>
+                <button onClick={() => { scrollToSection('color-grading'); setIsMenuOpen(false); }} className="block w-full text-lg">Coloring</button>
+                <button onClick={() => { scrollToSection('contact'); setIsMenuOpen(false); }} className="block w-full text-lg text-amber-500">Contact</button>
               </div>
             </div>
           )}
@@ -192,74 +129,123 @@ const App = () => {
 
         {/* Hero Section */}
         <main>
-          <section id="hero" className="min-h-screen flex items-center justify-center pt-20 px-6">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[80vh] lg:min-h-auto">
-                {/* 3D Avatar - Show First on Mobile */}
-                <div className="order-1 lg:order-2 relative w-full flex justify-center">
-                  <div className="relative z-10 w-full max-w-xs sm:max-w-sm lg:max-w-md">
-                    <HeroAvatar className="w-full h-[300px] sm:h-[400px] lg:h-[500px]" />
-
-                  </div>
-                  {/* Decorative elements */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-blue-500/10 rounded-full blur-3xl -z-10 scale-75"></div>
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl -z-10"></div>
+          <section id="hero" className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+            {/* Cinematic Background Video - Strictly for Hero */}
+            <VideoBackground src="/reels/anshika-montage.mp4" />
+            
+            <div className="text-center z-20 mt-12">
+              <div className="sans-minimal mb-6 text-amber-500 opacity-80 animate-fade-in-up">
+                {portfolioConfig?.personal?.availability}
+              </div>
+              <h1 className="text-[10vw] md:text-[6vw] lg:text-[100px] font-black tracking-tighter leading-none flex flex-col items-center justify-center select-none">
+                <div className="flex flex-col md:flex-row items-center justify-center gap-x-4">
+                  <span className="serif-italic bg-clip-text text-transparent bg-gradient-to-b from-white via-white/80 to-white/20 uppercase">
+                    Crafting,
+                  </span>
+                  <span className="text-white uppercase font-sans animate-fade-in-up">
+                    Creating.
+                  </span>
                 </div>
-
-                {/* Text Content - Show Below Avatar on Mobile */}
-                <div className="text-center lg:text-left order-2 lg:order-1 px-4 lg:px-0">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs uppercase tracking-widest mb-4 lg:mb-6 text-amber-500 font-semibold">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    {portfolioConfig?.personal?.availability || "Available for freelance"}
-                  </div>
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 lg:mb-8 leading-[1.1]">
-                    Crafting Stories Through <br className="hidden sm:block" />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 via-neutral-400 to-neutral-600">Light & Color</span>
-                  </h1>
-                  <p className="text-base sm:text-lg lg:text-xl text-neutral-400 max-w-lg lg:max-w-2xl mx-auto lg:mx-0 mb-8 lg:mb-10 font-light leading-relaxed">
-                    {portfolioConfig?.personal?.description || "Professional Photographer, Video Editor, and Colorist helping brands and creatives achieve the perfect cinematic look."}
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 justify-center lg:justify-start mb-8 lg:mb-0">
-                    <button onClick={() => scrollToSection('showreel')} className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-black rounded-full font-bold hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 group text-sm sm:text-base">
-                      View Showreel <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                    <button onClick={() => scrollToSection('contact')} className="px-6 sm:px-8 py-3 sm:py-4 bg-transparent border border-white/20 text-white rounded-full font-semibold hover:bg-white/5 transition-all text-sm sm:text-base">
-                      Pitch Your Project
-                    </button>
-                  </div>
+                <div className="text-lg md:text-xl lg:text-2xl mt-6 font-light tracking-[0.4em] text-white/60 uppercase">
+                  through Light & Color
                 </div>
+              </h1>
+              <p className="max-w-xl mx-auto mt-8 text-white/60 font-light text-sm md:text-base leading-relaxed tracking-wide px-4">
+                {portfolioConfig?.personal?.description}
+              </p>
+            </div>
+
+            {/* Bottom Info Bar - Minimal Jiyad Style */}
+            <div className="absolute bottom-12 left-0 w-full px-8 md:px-16 flex flex-col md:flex-row justify-between items-center sans-minimal text-white/40">
+              <div className="flex items-center gap-6 mb-6 md:mb-0 w-full md:w-auto justify-between md:justify-start">
+                <span>Est 2021</span>
+                <div className="flex-grow md:w-48 h-[1px] bg-white/10 mx-4"></div>
+              </div>
+              <div className="mb-6 md:mb-0 text-white/80 tracking-[0.5em]">{portfolioConfig?.personal?.location.toUpperCase()}</div>
+              <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <div className="flex-grow md:w-48 h-[1px] bg-white/10 mx-4"></div>
+                <span>{portfolioConfig?.personal?.profession.split(',')[0].toUpperCase()}</span>
               </div>
             </div>
           </section>
 
-          {/* Services Section */}
-          <section id="services" className="py-24 px-6">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-4xl font-bold mb-12 text-center">What I Do</h2>
-              <div className="grid md:grid-cols-3 gap-8">
-                {services.map((service, index) => {
-                  const IconComponent = service.icon === 'Aperture' ? Aperture : 
-                                       service.icon === 'Video' ? Video : Palette;
-                  return (
-                    <div key={index} className="p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-amber-500/30 hover:bg-white/8 transition-all duration-300 group hover:scale-105 hover:shadow-xl hover:shadow-white/5">
-                      <div className="w-12 h-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-lg flex items-center justify-center mb-6 text-amber-500 group-hover:scale-110 group-hover:bg-amber-500/10 group-hover:border-amber-500/20 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-amber-500/10">
-                        <IconComponent size={24} />
-                      </div>
-                      <h3 className="text-2xl font-bold mb-3 group-hover:text-amber-400 transition-colors duration-300">{service.title}</h3>
-                      <p className="text-neutral-400 group-hover:text-neutral-300 mb-6 leading-relaxed transition-colors duration-300">
-                        {service.description}
-                      </p>
-                      <ul className="space-y-2">
-                        {service.features.map((feature, featureIndex) => (
-                          <li key={featureIndex} className="flex items-start gap-2 text-sm text-neutral-500 group-hover:text-neutral-400 transition-colors duration-300">
-                            <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                })}
+          {/* Services/About Section */}
+          <section id="services" className="py-32 px-8 md:px-16 bg-neutral-950 relative overflow-hidden">
+            <div className="max-w-[1600px] mx-auto">
+              <div className="grid lg:grid-cols-2 gap-20 items-start">
+                {/* Left: Big Image Placeholder */}
+                <motion.div 
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  viewport={{ once: true }}
+                  className="relative group"
+                >
+                  <div className="aspect-[4/5] overflow-hidden bg-neutral-900 grayscale hover:grayscale-0 transition-all duration-1000">
+                    <img 
+                      src="/images/abhishek-about.jpg" 
+                      alt="Abhishek Kumar" 
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      onError={(e) => {
+                        e.target.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2000&auto=format&fit=crop";
+                      }}
+                    />
+                  </div>
+                  <div className="absolute -bottom-6 -right-6 w-32 h-32 border-r border-b border-amber-500/30"></div>
+                </motion.div>
+
+                {/* Right: Text Content */}
+                <div className="flex flex-col pt-10">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    viewport={{ once: true }}
+                    className="sans-minimal text-amber-500 mb-8"
+                  >
+                    About Me
+                  </motion.div>
+                  
+                  <motion.h2 
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                    viewport={{ once: true }}
+                    className="text-5xl md:text-7xl font-bold tracking-tighter mb-12 uppercase leading-none"
+                  >
+                    Driven by <br />
+                    <span className="serif-italic lowercase text-white/40">visual</span> storytelling
+                  </motion.h2>
+                  
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.6 }}
+                    viewport={{ once: true }}
+                    className="text-xl md:text-2xl text-white/80 font-light leading-relaxed mb-12 max-w-2xl"
+                  >
+                    {portfolioConfig?.personal?.description}
+                  </motion.p>
+
+                  <div className="grid sm:grid-cols-2 gap-12 mt-8">
+                    {services.map((service, index) => (
+                      <motion.div 
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.7 + (index * 0.1) }}
+                        viewport={{ once: true }}
+                        className="flex flex-col gap-4"
+                      >
+                        <div className="sans-minimal text-white/30">0{index + 1} / {service.title}</div>
+                        <div className="w-12 h-[1px] bg-amber-500/50"></div>
+                        <p className="text-sm text-white/50 leading-relaxed font-light">
+                          {service.description}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </section>

@@ -96,6 +96,36 @@ export const portfolioConfig = {
           tags: ["BTS", "Process", "Team Work"],
           year: "2024",
           type: "Behind the Scenes"
+        },
+        {
+          id: "fuse-3",
+          title: "Fuse Bangalore",
+          videoSrc: "/reels/fuse-bangalore.mp4",
+          thumbnail: "/thumbnails/fuse-bangalore.jpg",
+          desc: "Bangalore edition of the brand's signature creative series",
+          duration: "1:00",
+          tags: ["Event", "Bangalore", "Brand Content"],
+          year: "2024",
+          type: "Brand Event"
+        }
+      ]
+    },
+
+    duroflex: {
+      brandName: "Duroflex",
+      brandColor: "#0054A6", // Duroflex Blue
+      description: "Collaborative projects and lifestyle campaigns",
+      videos: [
+        {
+          id: "duroflex-1",
+          title: "Shreyanka x Duroflex",
+          videoSrc: "/reels/shreyanka-x-duroflex.mp4",
+          thumbnail: "/thumbnails/duroflex.jpg",
+          desc: "Premium collaboration featuring Shreyanka Patil for Duroflex",
+          duration: "0:45",
+          tags: ["Collaboration", "Lifestyle", "Sports"],
+          year: "2024",
+          type: "Collaboration"
         }
       ]
     },
