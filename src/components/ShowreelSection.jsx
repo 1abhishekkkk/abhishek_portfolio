@@ -5,6 +5,11 @@ import { Play, Pause, Volume2, VolumeX, X, Maximize2 } from 'lucide-react';
 // Your actual showreel videos - add your Fuse brand edit here
 const reels = [
   { 
+    id: 0, 
+    src: "/reels/fuse-2-render.mp4", 
+    title: "Fuse Bangalore 2 Render",
+  },
+  { 
     id: 1, 
     src: "/reels/shreyanka-x-duroflex.mp4", 
     title: "Shreyanka x Duroflex",

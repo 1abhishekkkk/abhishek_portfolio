@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { 
   Camera, Video, Palette, Play, Menu, X, 
   Instagram, Linkedin, Mail, ArrowRight,
@@ -7,16 +7,16 @@ import {
   Phone, MessageCircle, Pause, Volume2, VolumeX
 } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
-import ParticleBackground from './ParticleBackground';
 import VideoBackground from './components/VideoBackground';
-import { HeroAvatar, FloatingAvatar } from './Avatar3D';
 import { portfolioConfig, services } from './portfolioData';
-import ShowreelSection from './components/ShowreelSection';
-import LongFormSection from './components/LongFormSection';
-import ColorGradingSection from './components/ColorGradingSection';
-import InstagramFeed from './components/InstagramFeed';
-import InstagramFeedLive from './components/InstagramFeedLive';
 import Toasts from './components/Toasts';
+
+const ParticleBackground = React.lazy(() => import('./ParticleBackground'));
+const FloatingAvatar = React.lazy(() => import('./Avatar3D').then(m => ({ default: m.FloatingAvatar })));
+const ShowreelSection = React.lazy(() => import('./components/ShowreelSection'));
+const LongFormSection = React.lazy(() => import('./components/LongFormSection'));
+const ColorGradingSection = React.lazy(() => import('./components/ColorGradingSection'));
+const InstagramFeedLive = React.lazy(() => import('./components/InstagramFeedLive'));
 const App = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -252,7 +252,9 @@ const App = () => {
 
           {/* Showreel Section */}
           <section id="showreel" className="py-20">
-            <ShowreelSection />
+            <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading works...</div>}>
+              <ShowreelSection />
+            </Suspense>
           </section>
 
           {/* Color Grading Section */}
@@ -557,7 +559,9 @@ const App = () => {
       </div>
 
       {/* Floating Avatar */}
-      <FloatingAvatar />
+      <Suspense fallback={null}>
+        <FloatingAvatar />
+      </Suspense>
 
       {/* Project Modal */}
       {modalItem && (
