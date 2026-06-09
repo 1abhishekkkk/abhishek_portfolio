@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect, Suspense } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment, ContactShadows, Text, Html } from '@react-three/drei';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import * as THREE from 'three';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Environment, ContactShadows, Html } from '@react-three/drei';
 
 // Realistic 3D Avatar using basic geometries
 const SimpleAvatar = ({ position = [0, 0, 0], scale = 1 }) => {
@@ -225,43 +223,8 @@ const SimpleAvatar = ({ position = [0, 0, 0], scale = 1 }) => {
   );
 };
 
-// GLTF Model Loader Component
-const GLTFAvatar = ({ modelPath, position = [0, 0, 0], scale = 1 }) => {
-  console.log('Loading GLB model from:', modelPath);
-  const gltf = useLoader(GLTFLoader, modelPath);
-  const modelRef = useRef();
-  console.log('GLB model loaded successfully:', gltf);
-  
-  useFrame((state) => {
-    if (modelRef.current) {
-      modelRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
-    }
-  });
-
-  useEffect(() => {
-    if (gltf.scene) {
-      gltf.scene.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-        }
-      });
-    }
-  }, [gltf]);
-
-  return (
-    <primitive 
-      ref={modelRef}
-      object={gltf.scene} 
-      position={position}
-      scale={scale}
-    />
-  );
-};
-
 // Main Avatar Component
 const Avatar3D = ({ 
-  modelPath = "/models/editor-avatar.glb", // Your video editor avatar
   position = [0, -1.5, 0], 
   scale = 1.2,
   showControls = true,
@@ -269,8 +232,6 @@ const Avatar3D = ({
   style = {},
   className = ""
 }) => {
-  const [modelError, setModelError] = useState(false);
-
   return (
     <div className={`w-full h-full ${className}`} style={style}>
       <Canvas
@@ -329,8 +290,8 @@ export const FloatingAvatar = () => {
   const [isMinimized, setIsMinimized] = useState(false);
 
   return (
-    <div className={`fixed bottom-6 right-6 z-40 transition-all duration-300 ${
-      isMinimized ? 'w-16 h-16' : 'w-48 h-48'
+    <div className={`fixed bottom-4 right-4 z-30 transition-all duration-300 md:bottom-6 md:right-6 ${
+      isMinimized ? 'w-14 h-14 md:w-16 md:h-16' : 'w-32 h-32 md:w-48 md:h-48'
     }`}>
       <div className="relative w-full h-full bg-black/20 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden">
         <Avatar3D 

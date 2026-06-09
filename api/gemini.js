@@ -78,7 +78,7 @@ export default async function handler(req, res) {
     const candidate = extractJsonBlock(text);
     try {
       parsed = JSON.parse(candidate);
-    } catch (e) {
+    } catch {
       // Not valid JSON — attempt to recover gracefully with a structured fallback
       const out = coerceOutput({}, text);
       return res.status(200).json(out);

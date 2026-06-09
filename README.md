@@ -1,16 +1,38 @@
-# React + Vite
+# Abhishek Kumar Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Cinematic portfolio site for Abhishek Kumar, built with React, Vite, Tailwind CSS, Framer Motion, and Vercel serverless API routes.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Video-first hero and showreel
+- Brand partner proof section
+- Case studies for campaign work
+- Service packages and project CTA
+- Before/after color grading comparisons
+- AI creative concept generator
+- Contact form backed by Postgres on Vercel
+- Lightweight admin page for viewing leads
 
-## React Compiler
+## Local Development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+## Production
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm run build
+npm run preview
+```
+
+Required environment variables for deployed API routes:
+
+- `DATABASE_URL`
+- `GEMINI_API_KEY`
+- `ADMIN_PASSWORD`
+
+## Content
+
+Most public-facing text, brand proof, case studies, packages, and project metadata live in `src/portfolioData.js`.

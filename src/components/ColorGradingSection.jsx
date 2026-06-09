@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX, Maximize2, Palette, Sparkles } from 'lucide-react';
+import { Maximize2, Palette } from 'lucide-react';
 
 const ColorGradingSection = () => {
   const [expandedItem, setExpandedItem] = useState(null);
@@ -9,27 +9,23 @@ const ColorGradingSection = () => {
   const beforeAfterSets = [
     {
       id: 1,
-      before: "/images/color-before-1.jpg",
-      after: "/images/color-after-1.jpg",
+      before: "/images/abhishek-about.jpg",
+      after: "/images/abhishek-about.jpg",
       type: "image",
       title: "Cinematic Color Grading",
-      description: "From raw footage to cinematic color grade"
+      description: "From flat monochrome treatment to a warmer, polished portrait finish",
+      beforeClass: "grayscale contrast-75 brightness-110",
+      afterClass: "contrast-110 saturate-125"
     },
     {
       id: 2,
-      before: "/images/color-before-2.jpg",
-      after: "/images/color-after-2.jpg",
+      before: "/thumbnails/fuse-bangalore.jpg",
+      after: "/thumbnails/fuse-bangalore.jpg",
       type: "image",
       title: "Professional Color Grade",
-      description: "Transforming flat footage into vibrant cinematic visuals"
-    },
-    {
-      id: 3,
-      before: "/reels/before-3.mp4",
-      after: "/reels/after-3.mp4",
-      type: "video",
-      title: "Brand Commercial",
-      description: "Color transformation for maximum visual impact"
+      description: "Lifting event footage with cleaner contrast and stronger brand color",
+      beforeClass: "grayscale brightness-110 contrast-75",
+      afterClass: "contrast-125 saturate-150"
     }
   ];
 
@@ -127,6 +123,8 @@ const ColorGradingSection = () => {
           window.removeEventListener('touchend', handleTouchEnd);
         };
       }
+    // Drag listeners only need to attach while a drag is active.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDragging]);
 
     // Sync video playback
@@ -185,10 +183,10 @@ const ColorGradingSection = () => {
               <img
                 src={set.after}
                 alt="After color grading"
-                className="w-full h-full object-cover"
+                className={`w-full h-full object-cover ${set.afterClass || ''}`}
               />
             )}
-            <div className="absolute top-4 right-4 px-3 py-1 bg-amber-500/90 rounded-full text-black text-sm font-semibold">
+            <div className="absolute top-4 right-4 px-3 py-1 bg-brand-amber rounded-full text-black text-sm font-semibold">
               After
             </div>
           </div>
@@ -212,7 +210,7 @@ const ColorGradingSection = () => {
               <img
                 src={set.before}
                 alt="Before color grading"
-                className="w-full h-full object-cover"
+                className={`w-full h-full object-cover ${set.beforeClass || ''}`}
               />
             )}
             <div className="absolute top-4 left-4 px-3 py-1 bg-white/90 rounded-full text-black text-sm font-semibold">
@@ -235,10 +233,10 @@ const ColorGradingSection = () => {
         </div>
 
         {/* Title */}
-        <div className="bg-neutral-900/80 backdrop-blur-sm p-4 border-t border-white/10">
-          <h3 className="text-white text-lg font-bold mb-1">{set.title}</h3>
-          <p className="text-gray-400 text-sm">{set.description}</p>
-          <p className="text-amber-500 text-xs mt-2">← Drag slider · Tap to expand →</p>
+        <div className="bg-neutral-900 p-4 border-t border-white/5">
+          <h3 className="text-white text-lg font-bold mb-1 uppercase tracking-tight">{set.title}</h3>
+          <p className="text-white/50 text-xs font-medium">{set.description}</p>
+          <p className="text-brand-amber text-[10px] font-bold uppercase tracking-widest mt-2">← Drag slider · Tap to expand →</p>
         </div>
       </motion.div>
     );
@@ -315,6 +313,8 @@ const ColorGradingSection = () => {
           window.removeEventListener('touchend', handleTouchEnd);
         };
       }
+    // Drag listeners only need to attach while a drag is active.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDragging]);
 
     // Sync video playback
@@ -383,10 +383,10 @@ const ColorGradingSection = () => {
                   <img
                     src={set.after}
                     alt="After color grading"
-                    className="w-full h-full object-contain bg-black"
+                    className={`w-full h-full object-contain bg-black ${set.afterClass || ''}`}
                   />
                 )}
-                <div className="absolute top-6 right-6 px-4 py-2 bg-amber-500/90 rounded-full text-black text-base font-semibold shadow-lg">
+                <div className="absolute top-6 right-6 px-4 py-2 bg-brand-amber rounded-full text-black text-base font-semibold shadow-lg">
                   After
                 </div>
               </div>
@@ -410,7 +410,7 @@ const ColorGradingSection = () => {
                   <img
                     src={set.before}
                     alt="Before color grading"
-                    className="w-full h-full object-contain bg-black"
+                    className={`w-full h-full object-contain bg-black ${set.beforeClass || ''}`}
                   />
                 )}
                 <div className="absolute top-6 left-6 px-4 py-2 bg-white/90 rounded-full text-black text-base font-semibold shadow-lg">
@@ -445,7 +445,7 @@ const ColorGradingSection = () => {
   };
 
   return (
-    <section id="color-grading" className="py-24 px-6">
+    <section id="color-grading" className="py-24 px-6 bg-transparent">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -455,14 +455,14 @@ const ColorGradingSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-sm text-amber-500 mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-amber/10 border border-brand-amber/20 text-sm text-brand-amber mb-4 font-bold tracking-widest uppercase">
             <Palette className="w-4 h-4" />
             Color Mastery
           </div>
-          <h2 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-4 text-white uppercase">
             Color Grading
           </h2>
-          <p className="text-lg text-neutral-400 max-w-2xl mx-auto">
+          <p className="text-lg text-white/60 max-w-2xl mx-auto font-medium">
             See the dramatic transformation from raw footage to cinematic masterpiece. Drag the slider to compare before and after.
           </p>
         </motion.div>
@@ -471,7 +471,7 @@ const ColorGradingSection = () => {
         <div className="relative">
           {/* Scroll hint */}
           <motion.div 
-            className="text-center mb-4 text-neutral-500 text-sm flex items-center justify-center gap-2"
+            className="text-center mb-4 text-white/40 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -490,10 +490,10 @@ const ColorGradingSection = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="overflow-x-auto overflow-y-hidden pb-6 scrollbar-thin scrollbar-thumb-amber-500 scrollbar-track-neutral-800"
+            className="overflow-x-auto overflow-y-hidden pb-6 scrollbar-thin scrollbar-thumb-brand-amber scrollbar-track-white/5"
             style={{
               scrollbarWidth: 'thin',
-              scrollbarColor: '#f59e0b #262626'
+              scrollbarColor: '#f59e0b rgba(255,255,255,0.05)'
             }}
           >
             <div className="flex gap-6 px-4 min-w-max">
@@ -508,8 +508,8 @@ const ColorGradingSection = () => {
           </motion.div>
 
           {/* Gradient fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-black/80 to-transparent pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-black/80 to-transparent pointer-events-none"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-neutral-950 to-transparent pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-neutral-950 to-transparent pointer-events-none"></div>
         </div>
 
         {/* CTA */}
@@ -520,12 +520,12 @@ const ColorGradingSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <p className="text-neutral-500 text-sm mb-6">
+          <p className="text-white/40 text-[10px] font-bold tracking-widest uppercase mb-6">
             Professional color grading services for commercials, music videos, and branded content
           </p>
           <button
             onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
-            className="px-8 py-3 bg-amber-500 text-black font-semibold rounded-full hover:bg-amber-400 transition-all"
+            className="px-8 py-3 bg-brand-amber text-black font-bold uppercase tracking-widest text-xs rounded-full hover:bg-white transition-all shadow-xl shadow-amber-500/20"
           >
             Get Professional Color Grading
           </button>

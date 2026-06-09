@@ -9,19 +9,19 @@ const LongFormSection = () => {
   const videos = [
     {
       id: 1,
-      src: "/reels/muscleblaze.mp4",
+      src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628812/reels/muscleblaze.mp4",
       title: "MuscleBlaze Campaign",
       description: "Brand commercial for MuscleBlaze"
     },
     {
       id: 2,
-      src: "/reels/oneplus-final.mp4",
+      src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628879/reels/oneplus-final.mp4",
       title: "OnePlus Campaign",
       description: "A cinematic journey showcasing the flagship features"
     },
     {
       id: 3,
-      src: "/reels/montage-trailer.mp4",
+      src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628772/reels/montage-trailer.mp4",
       title: "Montage Trailer",
       description: "An epic compilation of creative moments"
     }
@@ -114,8 +114,8 @@ const LongFormSection = () => {
               openModal(video);
             }}
           >
-            <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110 shadow-2xl">
-              <Play className="w-8 h-8 text-white ml-1" fill="white" />
+            <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110 shadow-2xl">
+              <Play className="w-8 h-8 text-black ml-1" fill="black" />
             </div>
           </div>
         )}
@@ -165,14 +165,17 @@ const LongFormSection = () => {
   };
 
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 px-4 bg-transparent">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-white mb-4">
-            Long Form <span className="text-amber-500">Content</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-sm text-amber-500 mb-4 uppercase tracking-widest font-bold">
+            Extended Cuts
+          </div>
+          <h2 className="text-5xl font-black tracking-tighter text-white mb-4 uppercase">
+            Long Form <span className="text-brand-amber">Content</span>
           </h2>
-          <p className="text-neutral-400 text-lg">Extended storytelling and cinematic experiences</p>
+          <p className="text-white/50 text-lg font-medium">Extended storytelling and cinematic experiences</p>
         </div>
 
         {/* Video Grid */}

@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { 
-  Camera, Video, Palette, Play, Menu, X, 
-  Instagram, Linkedin, Mail, ArrowRight,
-  MonitorPlay, Aperture, Layers, CheckCircle2,
-  Sparkles, Clapperboard, Lightbulb, Smartphone,
-  Phone, MessageCircle, Pause, Volume2, VolumeX
+  X, Menu, Instagram, Linkedin, Mail, ArrowRight,
+  Sparkles, Phone, MessageCircle, Play
 } from 'lucide-react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import VideoBackground from './components/VideoBackground';
 import { portfolioConfig, services } from './portfolioData';
 import Toasts from './components/Toasts';
@@ -17,11 +14,119 @@ const ShowreelSection = React.lazy(() => import('./components/ShowreelSection'))
 const LongFormSection = React.lazy(() => import('./components/LongFormSection'));
 const ColorGradingSection = React.lazy(() => import('./components/ColorGradingSection'));
 const InstagramFeedLive = React.lazy(() => import('./components/InstagramFeedLive'));
+
+const BrandProofSection = () => (
+  <section className="py-24 px-6 bg-neutral-950 border-y border-white/5">
+    <div className="max-w-[1400px] mx-auto">
+      <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-12">
+        <div>
+          <div className="sans-minimal text-amber-500 mb-4 font-black tracking-widest uppercase">Trusted Output</div>
+          <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] text-white">
+            Built for <span className="text-amber-500">brands</span> that move fast
+          </h2>
+        </div>
+        <p className="text-lg md:text-xl text-white/60 font-medium max-w-xl">
+          Launch edits, event films, color finishes, and social cuts shaped for teams that need polished work without slow production drag.
+        </p>
+      </div>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {portfolioConfig.brandPartners.map((brand) => (
+          <div key={brand.name} className="rounded-2xl border border-white/5 bg-white/5 p-6 hover:bg-white/10 transition-all group">
+            <div className="text-3xl font-black tracking-tighter uppercase mb-3 text-white group-hover:text-amber-500 transition-colors">{brand.name}</div>
+            <p className="text-sm text-white/50 font-semibold leading-relaxed">{brand.detail}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const CaseStudiesSection = () => (
+  <section id="case-studies" className="py-32 px-6 bg-neutral-950">
+    <div className="max-w-[1400px] mx-auto">
+      <div className="text-center mb-16">
+        <div className="sans-minimal text-amber-500 mb-4 font-black tracking-widest uppercase">Case Studies</div>
+        <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase text-white">Proof, not just pretty cuts</h2>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-6">
+        {portfolioConfig.caseStudies.map((study) => (
+          <article key={study.title} className="rounded-[2rem] border border-white/5 bg-white/[0.03] p-8 flex flex-col min-h-[520px] hover:border-amber-500/20 transition-all">
+            <div className="flex items-center justify-between gap-4 mb-10">
+              <span className="text-[10px] font-black tracking-[0.3em] text-amber-500 uppercase">{study.client}</span>
+              <span className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-amber-500" />
+              </span>
+            </div>
+
+            <h3 className="text-3xl font-black tracking-tighter uppercase mb-6 text-white">{study.title}</h3>
+            <div className="space-y-5 text-white/60 font-medium leading-relaxed">
+              <p><span className="text-white font-black">Goal:</span> {study.goal}</p>
+              <p><span className="text-white font-black">Role:</span> {study.role}</p>
+              <p><span className="text-white font-black">Output:</span> {study.output}</p>
+            </div>
+
+            <div className="mt-auto pt-8">
+              <p className="text-amber-500 font-bold mb-5 tracking-tight">{study.result}</p>
+              <div className="flex flex-wrap gap-2">
+                {study.tags.map((tag) => (
+                  <span key={tag} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/40">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const ServicePackagesSection = ({ onContact }) => (
+  <section id="packages" className="py-32 px-6 bg-neutral-950">
+    <div className="max-w-[1400px] mx-auto">
+      <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-16">
+        <div>
+          <div className="sans-minimal text-amber-500 mb-4 font-black tracking-widest uppercase">Packages</div>
+          <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] text-white">
+            Clear ways <br /> to start
+          </h2>
+        </div>
+        <button
+          onClick={onContact}
+          className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-amber-500 text-black text-xs font-black uppercase tracking-widest hover:bg-white transition-all"
+        >
+          Discuss a project <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-6">
+        {portfolioConfig.servicePackages.map((pack) => (
+          <div key={pack.title} className="rounded-[2rem] border border-white/5 bg-white/[0.03] p-8 hover:bg-white/[0.05] transition-all">
+            <h3 className="text-3xl font-black tracking-tighter uppercase mb-4 text-white">{pack.title}</h3>
+            <p className="text-white/50 font-medium mb-8 leading-relaxed italic text-sm">"{pack.bestFor}"</p>
+            <div className="space-y-4">
+              {pack.deliverables.map((item) => (
+                <div key={item} className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Sparkles className="w-3 h-3 text-amber-500" />
+                  </div>
+                  <span className="font-semibold text-white/70 text-sm tracking-tight">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 const App = () => {
-  const [activeFilter, setActiveFilter] = useState('all');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [modalItem, setModalItem] = useState(null);
   const [visionInput, setVisionInput] = useState('');
   const [visionResult, setVisionResult] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -35,13 +140,6 @@ const App = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Use projects from portfolioData.js with fallback
-  const projects = portfolioConfig?.projects || [];
-
-  const filteredProjects = activeFilter === 'all' 
-    ? projects 
-    : projects.filter(p => p.category === activeFilter);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -79,7 +177,9 @@ const App = () => {
   return (
     <div className="relative min-h-screen bg-neutral-950 text-white font-sans selection:bg-amber-500 selection:text-black">
       {/* Global Particle Background */}
-      <ParticleBackground />
+      <Suspense fallback={null}>
+        <ParticleBackground />
+      </Suspense>
       
       {/* Main Content */}
       <div className="relative z-10">
@@ -99,7 +199,7 @@ const App = () => {
               </span>
             </div>
             
-            <div className="hidden md:flex gap-12 sans-minimal">
+            <div className="hidden md:flex gap-12 sans-minimal items-center text-xs font-bold tracking-widest uppercase">
               <button onClick={() => scrollToSection('showreel')} className="hover:text-amber-400 transition-colors">Works</button>
               <button onClick={() => scrollToSection('services')} className="hover:text-amber-400 transition-colors">Services</button>
               <button onClick={() => scrollToSection('color-grading')} className="hover:text-amber-400 transition-colors">Coloring</button>
@@ -130,12 +230,11 @@ const App = () => {
         {/* Hero Section */}
         <main>
           <section id="hero" className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-            {/* Cinematic Background Video - Strictly for Hero */}
-            <VideoBackground src="/reels/anshika-montage.mp4" />
+            <VideoBackground src="https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628360/reels/anshika-montage.mp4" />
             
             <div className="text-center z-20 mt-12">
               <div className="sans-minimal mb-6 text-amber-500 opacity-80 animate-fade-in-up">
-                {portfolioConfig?.personal?.availability}
+                {portfolioConfig?.personal?.availability.toUpperCase()}
               </div>
               <h1 className="text-[10vw] md:text-[6vw] lg:text-[100px] font-black tracking-tighter leading-none flex flex-col items-center justify-center select-none">
                 <div className="flex flex-col md:flex-row items-center justify-center gap-x-4">
@@ -155,10 +254,10 @@ const App = () => {
               </p>
             </div>
 
-            {/* Bottom Info Bar - Minimal Jiyad Style */}
+            {/* Bottom Info Bar */}
             <div className="absolute bottom-12 left-0 w-full px-8 md:px-16 flex flex-col md:flex-row justify-between items-center sans-minimal text-white/40">
               <div className="flex items-center gap-6 mb-6 md:mb-0 w-full md:w-auto justify-between md:justify-start">
-                <span>Est 2021</span>
+                <span>EST 2021</span>
                 <div className="flex-grow md:w-48 h-[1px] bg-white/10 mx-4"></div>
               </div>
               <div className="mb-6 md:mb-0 text-white/80 tracking-[0.5em]">{portfolioConfig?.personal?.location.toUpperCase()}</div>
@@ -169,11 +268,12 @@ const App = () => {
             </div>
           </section>
 
+          <BrandProofSection />
+
           {/* Services/About Section */}
           <section id="services" className="py-32 px-8 md:px-16 bg-neutral-950 relative overflow-hidden">
             <div className="max-w-[1600px] mx-auto">
               <div className="grid lg:grid-cols-2 gap-20 items-start">
-                {/* Left: Big Image Placeholder */}
                 <motion.div 
                   initial={{ opacity: 0, x: -50 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -194,14 +294,13 @@ const App = () => {
                   <div className="absolute -bottom-6 -right-6 w-32 h-32 border-r border-b border-amber-500/30"></div>
                 </motion.div>
 
-                {/* Right: Text Content */}
                 <div className="flex flex-col pt-10">
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     viewport={{ once: true }}
-                    className="sans-minimal text-amber-500 mb-8"
+                    className="sans-minimal text-amber-500 mb-8 font-bold tracking-widest uppercase"
                   >
                     About Me
                   </motion.div>
@@ -237,7 +336,7 @@ const App = () => {
                         viewport={{ once: true }}
                         className="flex flex-col gap-4"
                       >
-                        <div className="sans-minimal text-white/30">0{index + 1} / {service.title}</div>
+                        <div className="sans-minimal text-white/30 text-[10px] font-bold tracking-widest uppercase">0{index + 1} / {service.title}</div>
                         <div className="w-12 h-[1px] bg-amber-500/50"></div>
                         <p className="text-sm text-white/50 leading-relaxed font-light">
                           {service.description}
@@ -251,80 +350,94 @@ const App = () => {
           </section>
 
           {/* Showreel Section */}
-          <section id="showreel" className="py-20">
-            <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading works...</div>}>
+          <section id="showreel" className="py-20 bg-neutral-950">
+            <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading works...</div>}>
               <ShowreelSection />
             </Suspense>
           </section>
 
-          {/* Color Grading Section */}
-          <ColorGradingSection />
+          <CaseStudiesSection />
 
-          {/* Instagram Feed Section - Live */}
-          <InstagramFeedLive />
+          {/* Color Grading Section */}
+          <section id="color-grading" className="py-20 bg-neutral-900/30">
+            <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading color work...</div>}>
+              <ColorGradingSection />
+            </Suspense>
+          </section>
+
+          {/* Instagram Feed Section */}
+          <section id="instagram" className="py-20">
+            <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading feed...</div>}>
+              <InstagramFeedLive />
+            </Suspense>
+          </section>
 
           {/* Long Form Content Section */}
           <section id="longform" className="py-20">
-            <LongFormSection />
+            <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading long form...</div>}>
+              <LongFormSection />
+            </Suspense>
           </section>
 
+          <ServicePackagesSection onContact={() => scrollToSection('contact')} />
+
           {/* AI Vision Section */}
-          <section id="ai-vision" className="py-24 px-6">
+          <section id="ai-vision" className="py-24 px-6 bg-neutral-950">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-sm text-amber-500 mb-4">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-sm text-amber-500 mb-4 uppercase tracking-widest font-bold">
                   <Sparkles size={14} /> AI-Powered
                 </div>
-                <h2 className="text-4xl font-bold mb-4">Creative Vision Generator</h2>
-                <p className="text-neutral-400 max-w-2xl mx-auto">
+                <h2 className="text-4xl md:text-6xl font-bold mb-4 uppercase tracking-tighter">Creative Vision Generator</h2>
+                <p className="text-neutral-400 max-w-2xl mx-auto text-lg">
                   Describe your vision and let AI generate creative concepts, color palettes, and styling ideas.
                 </p>
               </div>
               
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                <div className="space-y-4">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-12 shadow-2xl">
+                <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-2">Describe your vision</label>
+                    <label className="block text-[10px] font-bold text-neutral-500 mb-2 uppercase tracking-[0.2em]">Describe your vision</label>
                     <textarea
                       value={visionInput}
                       onChange={(e) => setVisionInput(e.target.value)}
                       placeholder="E.g., 'A futuristic cyberpunk cityscape at night with neon lights'"
-                      className="w-full h-32 bg-black/30 border border-white/10 rounded-lg p-4 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent transition-all resize-none"
+                      className="w-full h-40 bg-black/30 border border-white/10 rounded-xl p-6 text-white placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent transition-all resize-none text-lg font-light"
                     />
                   </div>
                   
                   <button
                     onClick={generateVision}
                     disabled={isGenerating || !visionInput.trim()}
-                    className="w-full py-3 bg-amber-500 text-black font-medium rounded-lg hover:bg-amber-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full py-5 bg-amber-500 text-black font-bold uppercase tracking-widest rounded-xl hover:bg-amber-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl shadow-amber-500/10"
                   >
                     {isGenerating ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+                        <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
                         Generating...
                       </>
                     ) : (
                       <>
-                        <Sparkles size={16} />
+                        <Sparkles size={18} />
                         Generate Vision
                       </>
                     )}
                   </button>
                   
                   {aiError && (
-                    <div className="text-red-400 text-sm text-center mt-2">{aiError}</div>
+                    <div className="text-red-400 text-sm text-center mt-2 uppercase font-bold tracking-tighter">{aiError}</div>
                   )}
                 </div>
                 
                 {visionResult && (
-                  <div className="mt-8 border-t border-white/10 pt-8">
-                    <h3 className="text-2xl font-bold mb-6">{visionResult.title}</h3>
-                    <p className="text-neutral-300 mb-6">"{visionResult.logline}"</p>
+                  <div className="mt-12 border-t border-white/10 pt-12 animate-fade-in-up">
+                    <h3 className="text-3xl font-bold mb-4 uppercase tracking-tight">{visionResult.title}</h3>
+                    <p className="text-neutral-400 text-xl mb-10 italic">"{visionResult.logline}"</p>
                     
-                    <div className="grid md:grid-cols-2 gap-8">
+                    <div className="grid md:grid-cols-2 gap-10">
                       <div>
-                        <h4 className="text-sm font-medium text-neutral-400 uppercase tracking-wider mb-3">Color Palette</h4>
-                        <div className="flex h-12 rounded-lg overflow-hidden border border-white/10">
+                        <h4 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4">Color Palette</h4>
+                        <div className="flex h-16 rounded-xl overflow-hidden border border-white/10">
                           {visionResult.colorPalette.map((color, i) => (
                             <div 
                               key={i} 
@@ -332,7 +445,7 @@ const App = () => {
                               style={{ backgroundColor: color }}
                               title={color}
                             >
-                              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
                                 {color}
                               </div>
                             </div>
@@ -341,31 +454,33 @@ const App = () => {
                       </div>
                       
                       <div>
-                        <h4 className="text-sm font-medium text-neutral-400 uppercase tracking-wider mb-3">Mood</h4>
-                        <div className="bg-black/30 border border-white/10 rounded-lg p-4">
-                          <p className="text-amber-400">{visionResult.mood}</p>
+                        <h4 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4">Mood</h4>
+                        <div className="bg-black/30 border border-white/10 rounded-xl p-5">
+                          <p className="text-amber-500 font-medium tracking-wide">{visionResult.mood}</p>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="mt-8">
-                      <h4 className="text-sm font-medium text-neutral-400 uppercase tracking-wider mb-3">Shot Ideas</h4>
-                      <ul className="space-y-3">
+                    <div className="mt-10">
+                      <h4 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4">Shot Ideas</h4>
+                      <ul className="grid gap-4">
                         {visionResult.shotIdeas.map((idea, i) => (
-                          <li key={i} className="flex items-start gap-3">
-                            <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <p className="text-neutral-300">{idea}</p>
+                          <li key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
+                            <div className="w-6 h-6 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
+                              {i + 1}
+                            </div>
+                            <p className="text-neutral-300 font-light">{idea}</p>
                           </li>
                         ))}
                       </ul>
                     </div>
                     
-                    <div className="mt-8 pt-6 border-t border-white/10">
+                    <div className="mt-12 pt-8 border-t border-white/10 text-center">
                       <button 
                         onClick={() => scrollToSection('contact')}
-                        className="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg font-medium transition-all"
+                        className="inline-flex items-center gap-2 text-amber-500 hover:text-white transition-colors group uppercase tracking-widest text-xs font-bold"
                       >
-                        Let's Bring This to Life
+                        Let's Bring This to Life <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                       </button>
                     </div>
                   </div>
@@ -375,184 +490,118 @@ const App = () => {
           </section>
 
           {/* Contact Section */}
-          <section id="contact" className="py-24 px-6">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-4">Let's Work Together</h2>
-                <p className="text-neutral-400 max-w-2xl mx-auto">
-                  Have a project in mind? I'd love to hear about it. Send me a message and let's create something amazing together.
-                </p>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-12">
-                <div className="space-y-8">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 flex-shrink-0">
-                      <Mail size={20} />
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-lg">Email</h3>
-                      <a href={`mailto:${portfolioConfig?.personal?.email || "abhishek274kumar@gmail.com"}`} className="text-neutral-400 hover:text-white transition-colors">
-                        {portfolioConfig?.personal?.email || "abhishek274kumar@gmail.com"}
-                      </a>
-                    </div>
-                  </div>
+          <section id="contact" className="py-40 px-6 bg-neutral-950">
+            <div className="max-w-6xl mx-auto">
+              <div className="grid lg:grid-cols-2 gap-20 items-center">
+                <div>
+                  <div className="sans-minimal text-amber-500 mb-8 font-bold tracking-[0.4em] uppercase">Get In Touch</div>
+                  <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-12 uppercase leading-[0.85]">
+                    Let's Build <br />
+                    Something <br />
+                    <span className="serif-italic lowercase text-white/30">epic</span>
+                  </h2>
+                  <p className="text-2xl text-white/60 font-light max-w-md mb-12 leading-relaxed">
+                    Have a vision? I have the tools and edit instincts to make it reality.
+                  </p>
                   
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 flex-shrink-0">
-                      <Phone size={20} />
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-lg">Phone</h3>
-                      <div className="space-y-1">
-                        <a href={`tel:${portfolioConfig?.personal?.phone || "+918957562928"}`} className="text-neutral-400 hover:text-white transition-colors block">
-                          {portfolioConfig?.personal?.phone || "+91 89575 62928"}
+                  <div className="space-y-10">
+                    <div className="flex items-center gap-6 group">
+                      <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500 transition-all duration-500">
+                        <Mail className="w-6 h-6 group-hover:text-black" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-bold text-neutral-500 tracking-widest uppercase mb-1">Email</div>
+                        <a href={`mailto:${portfolioConfig?.personal?.email}`} className="text-xl md:text-2xl font-bold hover:text-amber-500 transition-colors">
+                          {portfolioConfig?.personal?.email}
                         </a>
-                        {portfolioConfig?.personal?.phone2 && (
-                          <a href={`tel:${portfolioConfig.personal.phone2}`} className="text-neutral-400 hover:text-white transition-colors block">
-                            {portfolioConfig.personal.phone2}
-                          </a>
-                        )}
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 flex-shrink-0">
-                      <MessageCircle size={20} />
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-lg">WhatsApp</h3>
-                      <a 
-                        href={`https://wa.me/${portfolioConfig?.personal?.whatsapp || "919876543210"}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-neutral-400 hover:text-white transition-colors"
-                      >
-                        Chat on WhatsApp
-                      </a>
+                    
+                    <div className="flex items-center gap-6 group">
+                      <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500 transition-all duration-500">
+                        <Phone className="w-6 h-6 group-hover:text-black" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-bold text-neutral-500 tracking-widest uppercase mb-1">Phone</div>
+                        <div className="space-y-1">
+                          <a href={`tel:${portfolioConfig?.personal?.phone}`} className="text-xl md:text-2xl font-bold hover:text-amber-500 transition-colors block">
+                            {portfolioConfig?.personal?.phone}
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
                 
-                <form className="space-y-4" onSubmit={async (e) => {
-                  e.preventDefault();
-                  const form = e.currentTarget;
-                  const formData = new FormData(form);
-                  // Honeypot values
-                  const website = formData.get('website');
-                  const ts = formData.get('ts');
-                  
-                  if (website) {
-                    return; // silently drop spam bots that fill honeypot
-                  }
-                  
-                  const payload = {
-                    name: formData.get('name'),
-                    email: formData.get('email'),
-                    message: formData.get('message') || formData.get('subject') || ''
-                  };
-                  try {
-                    const res = await fetch('/api/submit', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(payload)
-                    });
-                    const data = await res.json();
-                    if (res.ok) {
-                      window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'success', message: 'Thanks! Your message was sent.' } }));
-                      form.reset();
-                    } else {
-                      window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: data?.error || 'Something went wrong.' } }));
+                <div className="bg-white/[0.03] p-8 md:p-12 rounded-[2.5rem] border border-white/10 backdrop-blur-sm">
+                  <form className="space-y-6" onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget;
+                    const formData = new FormData(form);
+                    const payload = {
+                      name: formData.get('name'),
+                      email: formData.get('email'),
+                      message: formData.get('message') || formData.get('subject') || ''
+                    };
+                    try {
+                      const res = await fetch('/api/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                      });
+                      if (res.ok) {
+                        window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'success', message: 'Thanks! Your message was sent.' } }));
+                        form.reset();
+                      } else {
+                        const data = await res.json();
+                        window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: data?.error || 'Something went wrong.' } }));
+                      }
+                    } catch {
+                      window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: 'Network error. Please try again.' } }));
                     }
-                  } catch (err) {
-                    window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: 'Network error. Please try again.' } }));
-                  }
-                }}>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-neutral-300 mb-1">Name</label>
-                      <input 
-                        name="name"
-                        type="text" 
-                        required
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent transition-all"
-                        placeholder="Your name"
-                      />
+                  }}>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 mb-2 uppercase tracking-widest">Name</label>
+                        <input name="name" type="text" required className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all" placeholder="YOUR NAME" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 mb-2 uppercase tracking-widest">Email</label>
+                        <input name="email" type="email" required className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all" placeholder="EMAIL@EXAMPLE.COM" />
+                      </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-neutral-300 mb-1">Email</label>
-                      <input 
-                        name="email"
-                        type="email" 
-                        required
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent transition-all"
-                        placeholder="your@email.com"
-                      />
+                      <label className="block text-[10px] font-bold text-neutral-500 mb-2 uppercase tracking-widest">Message</label>
+                      <textarea name="message" rows="6" required className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all resize-none" placeholder="TELL ME ABOUT YOUR PROJECT..."></textarea>
                     </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-1">Subject</label>
-                    <input 
-                      name="subject"
-                      type="text" 
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent transition-all"
-                      placeholder="What's this about? (optional)"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-1">Message</label>
-                    <textarea 
-                      name="message"
-                      rows="4"
-                      required
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent transition-all resize-none"
-                      placeholder="Tell me about your project..."
-                    ></textarea>
-                  </div>
-                  
-                  <button
-                    type="submit"
-                    className="w-full py-3 bg-amber-500 text-black font-medium rounded-lg hover:bg-amber-400 transition-all"
-                  >
-                    Send Message
-                  </button>
-                </form>
+                    <button type="submit" className="w-full py-5 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-amber-500 transition-all shadow-xl shadow-white/5">
+                      Send Message
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </section>
         </main>
 
-        {/* Toasts */}
-        <Toasts />
-
         {/* Footer */}
-        <footer className="border-t border-white/10 py-8">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="text-sm text-neutral-500">
-                &copy; {new Date().getFullYear()} Abhi Clicks. All rights reserved.
-              </div>
-              <div className="flex items-center gap-4 mt-4 md:mt-0">
-                <a 
-                  href={portfolioConfig?.social?.instagram || "#"} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-neutral-400 hover:text-white transition-colors"
-                >
-                  <Instagram size={20} />
-                </a>
-                <a 
-                  href={portfolioConfig?.social?.linkedin || "#"} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-neutral-400 hover:text-white transition-colors"
-                >
-                  <Linkedin size={20} />
-                </a>
-              </div>
+        <footer className="border-t border-white/10 py-20 bg-neutral-950">
+          <div className="max-w-[1800px] mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-12">
+            <div className="text-2xl font-black tracking-tighter">
+              {portfolioConfig?.personal?.name.toUpperCase()} <span className="text-neutral-500 font-light">{portfolioConfig?.personal?.tagline.toUpperCase()}</span>
+            </div>
+            
+            <div className="flex gap-10 text-[10px] font-bold tracking-widest uppercase">
+              <a href={portfolioConfig?.social?.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors flex items-center gap-2">
+                <Instagram size={14} /> Instagram
+              </a>
+              <a href={portfolioConfig?.social?.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors flex items-center gap-2">
+                <Linkedin size={14} /> LinkedIn
+              </a>
+            </div>
+            
+            <div className="text-[10px] font-bold text-neutral-600 tracking-widest uppercase">
+              &copy; {new Date().getFullYear()} {portfolioConfig?.personal?.fullName}. All rights reserved.
             </div>
           </div>
         </footer>
@@ -563,88 +612,8 @@ const App = () => {
         <FloatingAvatar />
       </Suspense>
 
-      {/* Project Modal */}
-      {modalItem && (
-        <div 
-          className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setModalItem(null)}
-        >
-          <div 
-            className="max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-neutral-900 rounded-xl border border-white/10"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="sticky top-0 bg-neutral-900/80 backdrop-blur-sm p-4 flex justify-between items-center border-b border-white/10 z-10">
-              <h3 className="text-xl font-bold">{modalItem.title}</h3>
-              <button 
-                onClick={() => setModalItem(null)}
-                className="text-neutral-400 hover:text-white transition-colors"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            
-            <div className="aspect-video w-full bg-black">
-              {modalItem.videoSrc ? (
-                <video 
-                  src={modalItem.videoSrc} 
-                  controls 
-                  autoPlay 
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <img 
-                  src={modalItem.image} 
-                  alt={modalItem.title}
-                  className="w-full h-full object-contain"
-                />
-              )}
-            </div>
-            
-            <div className="p-6 md:p-8">
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="px-3 py-1 bg-white/5 text-sm rounded-full border border-white/10">
-                  {modalItem.category}
-                </span>
-                {modalItem.duration && (
-                  <span className="px-3 py-1 bg-white/5 text-sm rounded-full border border-white/10">
-                    {modalItem.duration}
-                  </span>
-                )}
-              </div>
-              
-              <p className="text-neutral-300 mb-6">{modalItem.desc}</p>
-              
-              {modalItem.palette && (
-                <div className="mt-6">
-                  <h4 className="text-sm font-medium text-neutral-400 mb-3">Color Palette</h4>
-                  <div className="flex gap-2">
-                    {modalItem.palette.map((color, i) => (
-                      <div 
-                        key={i} 
-                        className="w-8 h-8 rounded-full border border-white/10"
-                        style={{ backgroundColor: color }}
-                        title={color}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              <div className="mt-8 pt-6 border-t border-white/10">
-                <button
-                  onClick={() => {
-                    setModalItem(null);
-                    scrollToSection('contact');
-                  }}
-                  className="w-full py-3 bg-amber-500 text-black font-medium rounded-lg hover:bg-amber-400 transition-all"
-                >
-                  Start a Project Like This
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Toast Notifications */}
+      <Toasts />
     </div>
   );
 };

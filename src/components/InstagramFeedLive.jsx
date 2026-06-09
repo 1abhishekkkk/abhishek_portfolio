@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Instagram } from 'lucide-react';
 
@@ -7,7 +7,7 @@ const InstagramFeedLive = () => {
   const instagramUrl = `https://instagram.com/${instagramUsername}`;
 
   return (
-    <section className="py-24 px-6 bg-gradient-to-b from-black via-neutral-950 to-black">
+    <section className="py-24 px-6 bg-brand-charcoal">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -17,13 +17,13 @@ const InstagramFeedLive = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-orange-500/10 border border-purple-500/20 text-sm text-purple-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-amber/10 border border-brand-amber/20 text-sm text-brand-amber mb-4">
             <Instagram className="w-4 h-4" />
             Live Feed
           </div>
           
-          <h2 className="text-4xl md:text-6xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-4">
+            <span className="text-white">
               Follow on Instagram
             </span>
           </h2>
@@ -37,7 +37,7 @@ const InstagramFeedLive = () => {
             href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-purple-500/50 transition-all hover:scale-105"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-brand-amber text-brand-charcoal font-black rounded-full hover:bg-white transition-all hover:scale-105"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

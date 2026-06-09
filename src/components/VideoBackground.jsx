@@ -1,6 +1,6 @@
 import React from 'react';
 
-const VideoBackground = ({ src = "/reels/anshika-montage.mp4" }) => {
+const VideoBackground = ({ src = "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628360/reels/anshika-montage.mp4" }) => {
   return (
     <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none bg-black">
       <div className="absolute inset-0 bg-black/40 z-10" /> 

@@ -5,53 +5,58 @@ import { Play, Pause, Volume2, VolumeX, X, Maximize2 } from 'lucide-react';
 // Your actual showreel videos - add your Fuse brand edit here
 const reels = [
   { 
+    id: 10, 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1780988936/reels/ishan-kishan.mp4", 
+    title: "Ishan Kishan - Cricket Edit",
+  },
+  { 
     id: 0, 
-    src: "/reels/fuse-2-render.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777740056/reels/fuse-2-render.mp4", 
     title: "Fuse Bangalore 2 Render",
   },
   { 
     id: 1, 
-    src: "/reels/shreyanka-x-duroflex.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777739610/reels/shreyanka-x-duroflex.mp4", 
     title: "Shreyanka x Duroflex",
   },
   { 
     id: 2, 
-    src: "/reels/fuse-bangalore.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628645/reels/fuse-bangalore.mp4", 
     title: "Fuse Bangalore",
   },
   { 
     id: 3, 
-    src: "/reels/fuse-bts-final.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628710/reels/fuse-bts-final.mp4", 
     title: "Fuse BTS Final",
   },
   { 
     id: 4, 
-    src: "/reels/realme-15pro-launch-new.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628896/reels/realme-15pro-launch-new.mp4", 
     title: "Realme 15 Pro Launch Event",
   },
   { 
     id: 5, 
-    src: "/reels/honor-brand.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628714/reels/honor-brand.mp4", 
     title: "Honor Brand Commercial",
   },
   { 
     id: 6, 
-    src: "/reels/realme-11pro.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628884/reels/realme-11pro.mp4", 
     title: "Realme 11 Pro",
   },
   { 
     id: 7, 
-    src: "/reels/fashion-gurav.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628375/reels/fashion-gurav.mp4", 
     title: "Fashion Commercial",
   },
   { 
     id: 8, 
-    src: "/reels/realme-16pro-plus.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628948/reels/realme-16pro-plus.mp4", 
     title: "Realme 16 Pro+",
   },
   { 
     id: 9, 
-    src: "/reels/realme-16pro-plus-launch.mp4", 
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628940/reels/realme-16pro-plus-launch.mp4", 
     title: "Realme 16 Pro+ Launch",
   }
 ];
@@ -336,7 +341,7 @@ const ShowreelSection = () => {
     <section 
       ref={sectionRef}
       id="showreel" 
-      className="py-24 px-6"
+      className="py-24 px-6 bg-transparent"
     >
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -348,7 +353,7 @@ const ShowreelSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-sm text-amber-500 mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-sm text-amber-500 mb-4 font-bold tracking-widest uppercase">
             <motion.div
               className="w-2 h-2 bg-amber-500 rounded-full"
               animate={{ scale: [1, 1.2, 1] }}
@@ -356,10 +361,10 @@ const ShowreelSection = () => {
             />
             Latest Work
           </div>
-          <h2 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-4 text-white uppercase">
             Showreel
           </h2>
-          <p className="text-lg text-neutral-400 max-w-2xl mx-auto">
+          <p className="text-lg text-white/60 max-w-2xl mx-auto font-medium">
             A collection of my latest video editing work showcasing different styles, 
             techniques, and creative approaches.
           </p>
@@ -409,7 +414,7 @@ const ShowreelSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-white/30 uppercase tracking-widest font-bold">
             Click any video to view in fullscreen • Hover to preview • Press ESC to close
           </p>
         </motion.div>

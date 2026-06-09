@@ -1,0 +1,12 @@
+video_backups_high_res/
+site.zip
+dist/
+node_modules/
+.git/
+*.mp4
+public/reels/
+acli.exe
+backup/
+*.bak
+App-broken.jsx
+App.jsx.bak
