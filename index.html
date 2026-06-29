@@ -1,6 +1,51 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- ===================== Spline Logo Override ===================== -->
+    <script>
+      (function() {
+        const originalAttachShadow = Element.prototype.attachShadow;
+        Element.prototype.attachShadow = function(options) {
+          const shadowRoot = originalAttachShadow.call(this, options);
+          
+          // Inject override CSS immediately into the shadow root
+          try {
+            const style = document.createElement('style');
+            style.textContent = `
+              #logo, a[href*="spline.design"], [class*="logo"], [id*="logo"] {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+              }
+            `;
+            shadowRoot.appendChild(style);
+          } catch (e) {}
+
+          // Fallback direct DOM deletion loop
+          const interval = setInterval(() => {
+            try {
+              const logo = shadowRoot.querySelector('#logo') || 
+                           shadowRoot.querySelector('a[href*="spline.design"]') ||
+                           shadowRoot.querySelector('[class*="logo"]') ||
+                           shadowRoot.querySelector('[id*="logo"]');
+              if (logo) {
+                logo.style.display = 'none';
+                logo.style.opacity = '0';
+                logo.style.visibility = 'hidden';
+                logo.style.pointerEvents = 'none';
+                logo.remove();
+                clearInterval(interval);
+              }
+            } catch (e) {}
+          }, 100);
+          setTimeout(() => clearInterval(interval), 10000);
+
+          return shadowRoot;
+        };
+      })();
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
