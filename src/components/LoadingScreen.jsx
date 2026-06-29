@@ -10,29 +10,51 @@ const LoadingScreen = ({ onComplete }) => {
 
   useEffect(() => {
     const hideSplineLogo = () => {
-      // 1. Target <spline-viewer> shadow DOM
-      const viewer = document.querySelector('spline-viewer');
-      if (viewer && viewer.shadowRoot) {
-        const logo = viewer.shadowRoot.querySelector('#logo');
-        if (logo) {
-          logo.style.display = 'none';
-          logo.style.opacity = '0';
-          logo.style.visibility = 'hidden';
-          logo.style.pointerEvents = 'none';
+      const styleContent = `
+        #logo, a[href*="spline.design"], [class*="logo"] {
+          display: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
         }
-      }
-      // 2. Target regular DOM elements just in case
-      const logos = document.querySelectorAll('#logo, a[href*="spline.design"]');
-      logos.forEach(logo => {
-        logo.style.display = 'none';
-        logo.style.opacity = '0';
-        logo.style.visibility = 'hidden';
-        logo.style.pointerEvents = 'none';
+      `;
+
+      const injectStyle = (shadowRoot) => {
+        if (shadowRoot.querySelector('#hide-spline-style')) return;
+        const style = document.createElement('style');
+        style.id = 'hide-spline-style';
+        style.textContent = styleContent;
+        shadowRoot.appendChild(style);
+      };
+
+      const searchShadow = (root) => {
+        if (!root) return;
+        injectStyle(root);
+        root.querySelectorAll('*').forEach(child => {
+          if (child.shadowRoot) {
+            searchShadow(child.shadowRoot);
+          }
+        });
+      };
+
+      // Traverse all elements in page to find shadow DOMs
+      document.querySelectorAll('*').forEach(el => {
+        if (el.shadowRoot) {
+          searchShadow(el.shadowRoot);
+        }
       });
+
+      // Inject into main document head as backup
+      if (!document.getElementById('hide-spline-style')) {
+        const style = document.createElement('style');
+        style.id = 'hide-spline-style';
+        style.textContent = styleContent;
+        document.head.appendChild(style);
+      }
     };
 
     const interval = setInterval(hideSplineLogo, 100);
-    const timeout = setTimeout(() => clearInterval(interval), 6000);
+    const timeout = setTimeout(() => clearInterval(interval), 8000);
 
     return () => {
       clearInterval(interval);
