@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Spline from '@splinetool/react-spline';
 
@@ -7,6 +7,38 @@ const GRAIN = `data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www
 const LoadingScreen = ({ onComplete }) => {
   const [isExiting, setIsExiting] = useState(false);
   const [splineLoaded, setSplineLoaded] = useState(false);
+
+  useEffect(() => {
+    const hideSplineLogo = () => {
+      // 1. Target <spline-viewer> shadow DOM
+      const viewer = document.querySelector('spline-viewer');
+      if (viewer && viewer.shadowRoot) {
+        const logo = viewer.shadowRoot.querySelector('#logo');
+        if (logo) {
+          logo.style.display = 'none';
+          logo.style.opacity = '0';
+          logo.style.visibility = 'hidden';
+          logo.style.pointerEvents = 'none';
+        }
+      }
+      // 2. Target regular DOM elements just in case
+      const logos = document.querySelectorAll('#logo, a[href*="spline.design"]');
+      logos.forEach(logo => {
+        logo.style.display = 'none';
+        logo.style.opacity = '0';
+        logo.style.visibility = 'hidden';
+        logo.style.pointerEvents = 'none';
+      });
+    };
+
+    const interval = setInterval(hideSplineLogo, 100);
+    const timeout = setTimeout(() => clearInterval(interval), 6000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, []);
 
   const handleEnter = () => {
     setIsExiting(true);
