@@ -79,3 +79,17 @@ body {
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
+/* Universal Spline Watermark Hider */
+#logo,
+.logo,
+[class*="spline-watermark"],
+[class*="logo"],
+[id*="logo"],
+a[href*="spline"],
+spline-viewer::part(logo) {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

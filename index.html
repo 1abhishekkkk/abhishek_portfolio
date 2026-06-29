@@ -1,18 +1,22 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- ===================== Spline Logo Override ===================== -->
     <script>
       (function() {
         const originalAttachShadow = Element.prototype.attachShadow;
         Element.prototype.attachShadow = function(options) {
+          // Force mode to 'open' so we can traverse it
+          if (options && options.mode === 'closed') {
+            options.mode = 'open';
+          }
+          
           const shadowRoot = originalAttachShadow.call(this, options);
           
           // Inject override CSS immediately into the shadow root
           try {
             const style = document.createElement('style');
             style.textContent = `
-              #logo, a[href*="spline.design"], [class*="logo"], [id*="logo"] {
+              #logo, a[href*="spline"], [class*="logo"], [id*="logo"], [class*="watermark"] {
                 display: none !important;
                 opacity: 0 !important;
                 visibility: hidden !important;
@@ -22,13 +26,14 @@
             shadowRoot.appendChild(style);
           } catch (e) {}
 
-          // Fallback direct DOM deletion loop
+          // Fallback direct DOM deletion loop inside shadow root
           const interval = setInterval(() => {
             try {
               const logo = shadowRoot.querySelector('#logo') || 
-                           shadowRoot.querySelector('a[href*="spline.design"]') ||
+                           shadowRoot.querySelector('a[href*="spline"]') ||
                            shadowRoot.querySelector('[class*="logo"]') ||
-                           shadowRoot.querySelector('[id*="logo"]');
+                           shadowRoot.querySelector('[id*="logo"]') ||
+                           shadowRoot.querySelector('[class*="watermark"]');
               if (logo) {
                 logo.style.display = 'none';
                 logo.style.opacity = '0';
@@ -43,6 +48,20 @@
 
           return shadowRoot;
         };
+
+        // Sweep the main document body periodically for any watermark elements
+        setInterval(() => {
+          try {
+            const mainLogos = document.querySelectorAll('#logo, a[href*="spline"], [class*="spline-watermark"], [class*="watermark"]');
+            mainLogos.forEach(logo => {
+              logo.style.display = 'none';
+              logo.style.opacity = '0';
+              logo.style.visibility = 'hidden';
+              logo.style.pointerEvents = 'none';
+              logo.remove();
+            });
+          } catch (e) {}
+        }, 150);
       })();
     </script>
 
