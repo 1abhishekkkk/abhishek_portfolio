@@ -1,12 +1,18 @@
+# Specify files to be ignored by Vercel deployment uploads.
+# This overrides .gitignore so Vercel CLI will upload our local public/reels/ videos successfully!
+
+node_modules
+.git
+.vercel
+dist
+dist-ssr
+.env
+.env.local
+*.local
+logs
+*.log
+npm-debug.log*
+.idea
+.DS_Store
 video_backups_high_res/
-site.zip
-dist/
-node_modules/
-.git/
-*.mp4
-public/reels/
-acli.exe
-backup/
-*.bak
-App-broken.jsx
-App.jsx.bak
+originals

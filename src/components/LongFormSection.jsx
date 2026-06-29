@@ -27,7 +27,7 @@ const LongFormSection = () => {
     },
     {
       id: 4,
-      src: "/reels/denovoo-longform.mp4",
+      src: "https://res.cloudinary.com/de6kkxnqn/video/upload/v1782728701/reels/denovoo-longform.mp4",
       title: "Denovoo Broadway",
       description: "Extended cinematic brand edit for Denovoo Broadway campaign"
     }
