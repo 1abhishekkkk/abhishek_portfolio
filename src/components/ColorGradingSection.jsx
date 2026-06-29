@@ -445,7 +445,7 @@ const ColorGradingSection = () => {
   };
 
   return (
-    <section id="color-grading" className="py-24 px-6 bg-transparent">
+    <section id="color-grading" className="py-24 px-6 bg-neutral-950">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -512,23 +512,52 @@ const ColorGradingSection = () => {
           <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-neutral-950 to-transparent pointer-events-none"></div>
         </div>
 
-        {/* CTA */}
+        {/* CTA — Premium Banner */}
         <motion.div
-          className="text-center mt-16"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          className="relative mt-16 rounded-2xl overflow-hidden border border-white/8"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <p className="text-white/40 text-[10px] font-bold tracking-widest uppercase mb-6">
-            Professional color grading services for commercials, music videos, and branded content
-          </p>
-          <button
-            onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
-            className="px-8 py-3 bg-brand-amber text-black font-bold uppercase tracking-widest text-xs rounded-full hover:bg-white transition-all shadow-xl shadow-amber-500/20"
-          >
-            Get Professional Color Grading
-          </button>
+          {/* Color spectrum bar */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[2px]"
+            style={{
+              background:
+                'linear-gradient(90deg, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6, #ec4899)',
+            }}
+          />
+          {/* Glass background */}
+          <div className="bg-white/[0.03] backdrop-blur-sm px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <div className="text-[9px] font-black uppercase tracking-[0.4em] text-amber-500 mb-2">
+                Professional Service
+              </div>
+              <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase mb-2">
+                Get your footage graded
+              </h3>
+              <p className="text-white/40 text-sm font-medium max-w-sm">
+                Commercials, music videos, brand content — any format, any look.
+              </p>
+            </div>
+            {/* Colour swatch dots */}
+            <div className="hidden md:flex items-center gap-2">
+              {['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6'].map((c) => (
+                <div
+                  key={c}
+                  className="w-4 h-4 rounded-full border-2 border-black/30"
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+              className="flex-shrink-0 px-8 py-4 bg-amber-500 text-black font-black uppercase tracking-widest text-xs rounded-full hover:bg-white transition-all shadow-2xl shadow-amber-500/30 hover:shadow-white/20"
+            >
+              Book a Grade →
+            </button>
+          </div>
         </motion.div>
       </div>
 

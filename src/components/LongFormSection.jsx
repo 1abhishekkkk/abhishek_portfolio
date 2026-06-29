@@ -24,6 +24,12 @@ const LongFormSection = () => {
       src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628772/reels/montage-trailer.mp4",
       title: "Montage Trailer",
       description: "An epic compilation of creative moments"
+    },
+    {
+      id: 4,
+      src: "/reels/denovoo-longform.mp4",
+      title: "Denovoo Broadway",
+      description: "Extended cinematic brand edit for Denovoo Broadway campaign"
     }
   ];
 
@@ -165,7 +171,7 @@ const LongFormSection = () => {
   };
 
   return (
-    <section className="py-20 px-4 bg-transparent">
+    <section className="py-20 px-4 bg-neutral-950">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -179,7 +185,7 @@ const LongFormSection = () => {
         </div>
 
         {/* Video Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {videos.map((video) => (
             <VideoCard key={video.id} video={video} />
           ))}

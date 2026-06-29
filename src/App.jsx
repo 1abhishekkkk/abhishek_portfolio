@@ -3,7 +3,7 @@ import {
   X, Menu, Instagram, Linkedin, Mail, ArrowRight,
   Sparkles, Phone, MessageCircle, Play
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import VideoBackground from './components/VideoBackground';
 import { portfolioConfig, services } from './portfolioData';
 import Toasts from './components/Toasts';
@@ -14,6 +14,10 @@ const ShowreelSection = React.lazy(() => import('./components/ShowreelSection'))
 const LongFormSection = React.lazy(() => import('./components/LongFormSection'));
 const ColorGradingSection = React.lazy(() => import('./components/ColorGradingSection'));
 const InstagramFeedLive = React.lazy(() => import('./components/InstagramFeedLive'));
+const StatsSection = React.lazy(() => import('./components/StatsSection'));
+const LoadingScreen = React.lazy(() => import('./components/LoadingScreen'));
+const TestimonialsSection = React.lazy(() => import('./components/TestimonialsSection'));
+const WorkProcessSection = React.lazy(() => import('./components/WorkProcessSection'));
 
 const BrandProofSection = () => (
   <section className="py-24 px-6 bg-neutral-950 border-y border-white/5">
@@ -131,6 +135,17 @@ const App = () => {
   const [visionResult, setVisionResult] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [aiError, setAiError] = useState(null);
+  const [showLoader, setShowLoader] = useState(true);
+
+  // Lock scroll during loading screen
+  useEffect(() => {
+    if (showLoader) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [showLoader]);
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -176,6 +191,14 @@ const App = () => {
 
   return (
     <div className="relative min-h-screen bg-neutral-950 text-white font-sans selection:bg-amber-500 selection:text-black">
+      {/* Cinematic Loading Screen */}
+      <AnimatePresence>
+        {showLoader && (
+          <Suspense fallback={null}>
+            <LoadingScreen onComplete={() => setShowLoader(false)} />
+          </Suspense>
+        )}
+      </AnimatePresence>
       {/* Global Particle Background */}
       <Suspense fallback={null}>
         <ParticleBackground />
@@ -270,6 +293,11 @@ const App = () => {
 
           <BrandProofSection />
 
+          {/* Stats Counter Section */}
+          <Suspense fallback={null}>
+            <StatsSection />
+          </Suspense>
+
           {/* Services/About Section */}
           <section id="services" className="py-32 px-8 md:px-16 bg-neutral-950 relative overflow-hidden">
             <div className="max-w-[1600px] mx-auto">
@@ -356,26 +384,36 @@ const App = () => {
             </Suspense>
           </section>
 
+          {/* Long Form Content Section */}
+          <section id="longform" className="py-20 bg-neutral-950">
+            <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading long form...</div>}>
+              <LongFormSection />
+            </Suspense>
+          </section>
+
           <CaseStudiesSection />
 
+          {/* Testimonials Section */}
+          <Suspense fallback={null}>
+            <TestimonialsSection />
+          </Suspense>
+
+          {/* Work Process Section */}
+          <Suspense fallback={null}>
+            <WorkProcessSection />
+          </Suspense>
+
           {/* Color Grading Section */}
-          <section id="color-grading" className="py-20 bg-neutral-900/30">
+          <section id="color-grading" className="py-20 bg-neutral-950">
             <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading color work...</div>}>
               <ColorGradingSection />
             </Suspense>
           </section>
 
           {/* Instagram Feed Section */}
-          <section id="instagram" className="py-20">
+          <section id="instagram" className="py-20 bg-neutral-950">
             <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading feed...</div>}>
               <InstagramFeedLive />
-            </Suspense>
-          </section>
-
-          {/* Long Form Content Section */}
-          <section id="longform" className="py-20">
-            <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading long form...</div>}>
-              <LongFormSection />
             </Suspense>
           </section>
 
