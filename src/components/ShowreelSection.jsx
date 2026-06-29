@@ -102,6 +102,13 @@ const ALL_REELS = [
     brand: "denovoo",
     type: "Brand Commercial",
   },
+  {
+    id: 14,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782736694/reels/mono-podcast.mp4",
+    title: "Mono Podcast",
+    brand: "mono",
+    type: "Podcast Edit",
+  },
 ];
 
 // Filter tabs config with brand accent colors
@@ -115,6 +122,7 @@ const FILTERS = [
   { id: "denovoo",  label: "Denovoo",  color: "#60a5fa", count: ALL_REELS.filter(r => r.brand === "denovoo").length },
   { id: "sports",   label: "Sports",   color: "#34d399", count: ALL_REELS.filter(r => r.brand === "sports").length },
   { id: "fashion",  label: "Fashion",  color: "#f472b6", count: ALL_REELS.filter(r => r.brand === "fashion").length },
+  { id: "mono",     label: "Mono",     color: "#94a3b8", count: ALL_REELS.filter(r => r.brand === "mono").length },
 ];
 
 // ---------- Reel Card ----------
