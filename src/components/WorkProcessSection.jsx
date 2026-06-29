@@ -76,14 +76,12 @@ const steps = [
 
 // Single Step Card
 const StepCard = ({ step, index, inView }) => {
-  const isEven = index % 2 === 0;
-
   return (
     <motion.div
-      className="relative flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10 group"
-      initial={{ opacity: 0, x: isEven ? -40 : 40 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.65, delay: step.delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={`relative flex flex-col sm:flex-row items-start gap-6 group ${index === 4 ? 'md:col-span-2 md:max-w-2xl mx-auto w-full' : ''}`}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.65, delay: step.delay, ease: 'easeOut' }}
     >
       {/* Step number + icon bubble */}
       <div className="flex-shrink-0 relative">
@@ -124,39 +122,9 @@ const StepCard = ({ step, index, inView }) => {
           {step.description}
         </p>
       </div>
-
-      {/* Right accent line (desktop only) */}
-      <motion.div
-        className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 h-16 w-[1px] opacity-20"
-        style={{ backgroundColor: step.color }}
-        initial={{ scaleY: 0 }}
-        animate={inView ? { scaleY: 1 } : {}}
-        transition={{ duration: 0.5, delay: step.delay + 0.3 }}
-      />
     </motion.div>
   );
 };
-
-// Animated connector
-const Connector = ({ color, inView, delay }) => (
-  <div className="flex items-center gap-4 pl-10 my-1">
-    <motion.div
-      className="w-[1px] h-10 ml-9"
-      style={{ backgroundColor: `${color}30` }}
-      initial={{ scaleY: 0, originY: 0 }}
-      animate={inView ? { scaleY: 1 } : {}}
-      transition={{ duration: 0.4, delay }}
-    />
-    <motion.div
-      className="text-[9px] font-black uppercase tracking-[0.3em] opacity-0"
-      animate={inView ? { opacity: 0.3 } : {}}
-      transition={{ duration: 0.4, delay: delay + 0.1 }}
-      style={{ color }}
-    >
-      then
-    </motion.div>
-  </div>
-);
 
 // ---- Main Section ----
 const WorkProcessSection = () => {
@@ -168,10 +136,10 @@ const WorkProcessSection = () => {
       {/* Subtle side gradient */}
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-amber-500/20 to-transparent" />
 
-      <div className="max-w-3xl mx-auto" ref={ref}>
+      <div className="max-w-6xl mx-auto" ref={ref}>
         {/* Header */}
         <motion.div
-          className="mb-16"
+          className="mb-16 text-center md:text-left"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -187,19 +155,10 @@ const WorkProcessSection = () => {
           </p>
         </motion.div>
 
-        {/* Steps with connectors */}
-        <div className="flex flex-col gap-0">
+        {/* Steps Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 md:gap-y-16">
           {steps.map((step, i) => (
-            <React.Fragment key={step.number}>
-              <StepCard step={step} index={i} inView={inView} />
-              {i < steps.length - 1 && (
-                <Connector
-                  color={step.color}
-                  inView={inView}
-                  delay={step.delay + 0.2}
-                />
-              )}
-            </React.Fragment>
+            <StepCard key={step.number} step={step} index={i} inView={inView} />
           ))}
         </div>
 
