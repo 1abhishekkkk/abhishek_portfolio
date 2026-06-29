@@ -130,6 +130,27 @@ const ALL_REELS = [
     brand: "fuse",
     type: "Product Showcase",
   },
+  {
+    id: 18,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782738541/reels/fuse-dragon-t.mp4",
+    title: "FUSE Dragon T",
+    brand: "fuse",
+    type: "Product Showcase",
+  },
+  {
+    id: 19,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782738585/reels/fuse-beetle-t.mp4",
+    title: "FUSE Beetle T",
+    brand: "fuse",
+    type: "Product Showcase",
+  },
+  {
+    id: 20,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782738601/reels/fuse-white-t.mp4",
+    title: "FUSE White T",
+    brand: "fuse",
+    type: "Product Showcase",
+  },
 ];
 
 // Filter tabs config with brand accent colors
