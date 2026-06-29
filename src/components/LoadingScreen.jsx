@@ -11,7 +11,7 @@ const LoadingScreen = ({ onComplete }) => {
   useEffect(() => {
     const hideSplineLogo = () => {
       const styleContent = `
-        #logo, a[href*="spline.design"], [class*="logo"] {
+        #logo, a[href*="spline.design"], [class*="logo"], [id*="logo"] {
           display: none !important;
           opacity: 0 !important;
           visibility: hidden !important;
@@ -19,42 +19,62 @@ const LoadingScreen = ({ onComplete }) => {
         }
       `;
 
-      const injectStyle = (shadowRoot) => {
-        if (shadowRoot.querySelector('#hide-spline-style')) return;
-        const style = document.createElement('style');
-        style.id = 'hide-spline-style';
-        style.textContent = styleContent;
-        shadowRoot.appendChild(style);
-      };
-
-      const searchShadow = (root) => {
+      const injectStyle = (root) => {
         if (!root) return;
-        injectStyle(root);
-        root.querySelectorAll('*').forEach(child => {
-          if (child.shadowRoot) {
-            searchShadow(child.shadowRoot);
-          }
-        });
+        if (root.querySelector && !root.querySelector('#hide-spline-style')) {
+          const style = document.createElement('style');
+          style.id = 'hide-spline-style';
+          style.textContent = styleContent;
+          root.appendChild(style);
+        }
       };
 
-      // Traverse all elements in page to find shadow DOMs
-      document.querySelectorAll('*').forEach(el => {
-        if (el.shadowRoot) {
-          searchShadow(el.shadowRoot);
+      const traverse = (node) => {
+        if (!node) return;
+
+        // If node has a shadowRoot, inject style and traverse inside it
+        if (node.shadowRoot) {
+          injectStyle(node.shadowRoot);
+          traverse(node.shadowRoot);
         }
-      });
+
+        // Direct removal fallback
+        try {
+          if (node.querySelector) {
+            const logo = node.querySelector('#logo') || 
+                         node.querySelector('a[href*="spline.design"]') || 
+                         node.querySelector('[class*="logo"]') || 
+                         node.querySelector('[id*="logo"]');
+            if (logo) {
+              logo.style.display = 'none';
+              logo.style.opacity = '0';
+              logo.style.visibility = 'hidden';
+              logo.style.pointerEvents = 'none';
+              logo.remove();
+            }
+          }
+        } catch {
+          // Ignore DOM exceptions during recursive tree traversal
+        }
+
+        // Traverse child nodes recursively
+        const children = node.children || node.childNodes;
+        if (children) {
+          for (let i = 0; i < children.length; i++) {
+            traverse(children[i]);
+          }
+        }
+      };
+
+      // Start traversing from document body
+      traverse(document.body);
 
       // Inject into main document head as backup
-      if (!document.getElementById('hide-spline-style')) {
-        const style = document.createElement('style');
-        style.id = 'hide-spline-style';
-        style.textContent = styleContent;
-        document.head.appendChild(style);
-      }
+      injectStyle(document.head);
     };
 
     const interval = setInterval(hideSplineLogo, 100);
-    const timeout = setTimeout(() => clearInterval(interval), 8000);
+    const timeout = setTimeout(() => clearInterval(interval), 10000);
 
     return () => {
       clearInterval(interval);
