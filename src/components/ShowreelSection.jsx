@@ -109,6 +109,27 @@ const ALL_REELS = [
     brand: "mono",
     type: "Podcast Edit",
   },
+  {
+    id: 15,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782737535/reels/fuse-black-t.mp4",
+    title: "FUSE Black T",
+    brand: "fuse",
+    type: "Product Showcase",
+  },
+  {
+    id: 16,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782737648/reels/fuse-violet-t.mp4",
+    title: "FUSE Violet T",
+    brand: "fuse",
+    type: "Product Showcase",
+  },
+  {
+    id: 17,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782737677/reels/fuse-tiger-t.mp4",
+    title: "FUSE Tiger T",
+    brand: "fuse",
+    type: "Product Showcase",
+  },
 ];
 
 // Filter tabs config with brand accent colors
