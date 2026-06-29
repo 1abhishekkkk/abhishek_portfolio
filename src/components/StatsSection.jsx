@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 // ---- Animated Counter Hook ----
-function useCountUp(target, duration = 2000, startOnView = true, inView = true) {
+function useCountUp(target, duration = 2000, inView = true) {
   const [count, setCount] = useState(0);
   const started = useRef(false);
 
@@ -28,7 +28,7 @@ function useCountUp(target, duration = 2000, startOnView = true, inView = true) 
 
 // ---- Single Stat Card ----
 const StatCard = ({ value, suffix, label, description, color, delay, inView }) => {
-  const count = useCountUp(value, 1800, true, inView);
+  const count = useCountUp(value, 1800, inView);
 
   return (
     <motion.div

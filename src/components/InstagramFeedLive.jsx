@@ -12,13 +12,6 @@ const stats = [
   { label: 'Following', value: '1,097' },
 ];
 
-// Floating tags that orbit the CTA
-const tags = [
-  { label: '#BrandFilms', icon: Film, x: '-left-4', y: 'top-10', delay: 0 },
-  { label: '#ColorGrade', icon: Star, x: 'right-0', y: 'top-6', delay: 0.15 },
-  { label: '#BTS', icon: Camera, x: '-left-2', y: 'bottom-12', delay: 0.3 },
-  { label: '#Realme', icon: Star, x: 'right-2', y: 'bottom-8', delay: 0.45 },
-];
 
 const InstagramFeedLive = () => (
   <section className="py-24 px-6 bg-neutral-950 relative overflow-hidden">

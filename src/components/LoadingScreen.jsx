@@ -3,6 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const GRAIN = `data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E`;
 
+// Simple deterministic pseudo-random number generator to maintain pure rendering
+const pseudoRandom = (seed) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
+
 // Horizontal static noise bars for signal phase
 const SignalNoise = () => (
   <motion.div
@@ -19,14 +25,14 @@ const SignalNoise = () => (
         animate={{
           backgroundColor: [
             'rgba(255,255,255,0)',
-            `rgba(255,255,255,${Math.random() * 0.12})`,
+            `rgba(255,255,255,${pseudoRandom(i * 12.34) * 0.12})`,
             'rgba(255,255,255,0)',
-            `rgba(255,255,255,${Math.random() * 0.08})`,
+            `rgba(255,255,255,${pseudoRandom(i * 56.78) * 0.08})`,
             'rgba(255,255,255,0)',
           ],
-          x: [0, Math.random() * 10 - 5, 0],
+          x: [0, pseudoRandom(i * 90.12) * 10 - 5, 0],
         }}
-        transition={{ duration: 0.45, delay: Math.random() * 0.25, ease: 'linear' }}
+        transition={{ duration: 0.45, delay: pseudoRandom(i * 34.56) * 0.25, ease: 'linear' }}
       />
     ))}
     {/* Bright flash bars */}

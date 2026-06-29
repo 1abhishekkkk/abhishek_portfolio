@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -273,6 +273,7 @@ const ShowreelSection = () => {
   const sectionRef = useRef(null);
   const modalVideoRef = useRef(null);
   const filterRef = useRef(null);
+  const mobileScrollRef = useRef(null);
 
   // 3D Carousel State
   const [rotation, setRotation] = useState(0);
@@ -294,8 +295,8 @@ const ShowreelSection = () => {
   }, []);
 
   const isMobile = windowWidth < 768;
-  const cardWidth = isMobile ? 180 : 230;
-  const cardHeight = isMobile ? 280 : 365;
+  const cardWidth = isMobile ? 145 : 190;
+  const cardHeight = isMobile ? 225 : 295;
 
   const filteredReels = activeFilter === 'all'
     ? ALL_REELS
@@ -317,7 +318,7 @@ const ShowreelSection = () => {
   };
 
   // Drag Gesture Handlers
-  const startDrag = (clientX) => {
+  const startDrag = useCallback((clientX) => {
     setIsDragging(true);
     dragStartX.current = clientX;
     dragStartRotation.current = rotation;
@@ -325,9 +326,9 @@ const ShowreelSection = () => {
     dragVelocity.current = 0;
     lastX.current = clientX;
     lastTime.current = performance.now();
-  };
+  }, [rotation]);
 
-  const moveDrag = (clientX) => {
+  const moveDrag = useCallback((clientX) => {
     if (!isDragging) return;
     const deltaX = clientX - dragStartX.current;
     dragDistance.current = deltaX;
@@ -343,9 +344,9 @@ const ShowreelSection = () => {
 
     // Apply drag rotation (1px drag = 0.35 deg rotation)
     setRotation(dragStartRotation.current + deltaX * 0.35);
-  };
+  }, [isDragging]);
 
-  const endDrag = () => {
+  const endDrag = useCallback(() => {
     setIsDragging(false);
 
     // Apply smooth inertia spin
@@ -363,6 +364,18 @@ const ShowreelSection = () => {
       };
       requestAnimationFrame(spin);
     }
+  }, [isDragging]);
+
+  const handleTouchStart = (e) => {
+    startDrag(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    moveDrag(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    endDrag();
   };
 
   // Global mouse event listener for dragging
@@ -383,10 +396,11 @@ const ShowreelSection = () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
       window.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, [isDragging]);
+  }, [isDragging, moveDrag, endDrag]);
 
-  // Auto-rotation when idle
+  // Auto-rotation when idle (Desktop only)
   useEffect(() => {
+    if (isMobile) return;
     let animationId;
     let lastTick = performance.now();
 
@@ -404,11 +418,11 @@ const ShowreelSection = () => {
 
     animationId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animationId);
-  }, [isDragging]);
+  }, [isDragging, isMobile]);
 
-  // Identify active (centered) card
+  // Identify active (centered) card for desktop
   useEffect(() => {
-    if (filteredReels.length === 0) return;
+    if (isMobile || filteredReels.length === 0) return;
 
     let closestReelId = null;
     let maxCos = -2;
@@ -427,7 +441,46 @@ const ShowreelSection = () => {
     });
 
     setActiveReel(closestReelId);
-  }, [rotation, filteredReels, activeFilter]);
+  }, [rotation, filteredReels, activeFilter, isMobile]);
+
+  // Mobile scroll handler to identify centered card
+  const handleMobileScroll = () => {
+    if (!mobileScrollRef.current || filteredReels.length === 0) return;
+    const container = mobileScrollRef.current;
+    const scrollLeft = container.scrollLeft;
+    const containerWidth = container.offsetWidth;
+    const center = scrollLeft + containerWidth / 2;
+
+    let closestReelId = null;
+    let minDiff = Infinity;
+
+    const children = container.children;
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      const childCenter = child.offsetLeft + child.offsetWidth / 2;
+      const diff = Math.abs(center - childCenter);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestReelId = filteredReels[i]?.id;
+      }
+    }
+
+    if (closestReelId !== null && closestReelId !== activeReel) {
+      setActiveReel(closestReelId);
+    }
+  };
+
+  // Reset scroll and set active reel on filter changes for mobile
+  useEffect(() => {
+    if (isMobile && mobileScrollRef.current) {
+      mobileScrollRef.current.scrollLeft = 0;
+      if (filteredReels.length > 0) {
+        setActiveReel(filteredReels[0].id);
+      } else {
+        setActiveReel(null);
+      }
+    }
+  }, [activeFilter, isMobile, filteredReels]);
 
   // Card click handler
   const handleCardClick = (reel, cosAngle) => {
@@ -586,98 +639,138 @@ const ShowreelSection = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* ---- 3D Draggable Wheel Viewport ---- */}
-        <div className="relative w-full h-[450px] md:h-[520px] flex items-center justify-center overflow-visible select-none my-6">
-          
-          {/* 3D Perspective container */}
+        {/* ---- Viewport ---- */}
+        {isMobile ? (
+          /* Mobile Flat Swipe Carousel */
           <div 
-            className="w-full h-full flex items-center justify-center overflow-visible relative"
-            style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
-            onMouseDown={(e) => startDrag(e.clientX)}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            ref={mobileScrollRef}
+            onScroll={handleMobileScroll}
+            className="w-full flex gap-5 overflow-x-auto snap-x snap-mandatory px-[calc(50vw-105px)] py-8 scrollbar-none my-6 select-none"
+            style={{ 
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none',
+              scrollBehavior: 'smooth'
+            }}
           >
-            
-            {/* Carousel Wheel Ring */}
-            <div
-              className="relative flex items-center justify-center cursor-grab active:cursor-grabbing overflow-visible"
-              style={{
-                width: cardWidth,
-                height: cardHeight,
-                transformStyle: 'preserve-3d',
-              }}
-            >
-              {filteredReels.map((reel, index) => {
-                const angle = index * (360 / filteredReels.length);
-                const relativeAngle = ((angle + rotation) % 360 + 360) % 360;
-                
-                // Normalise relative angle to find front factor
-                const rad = (relativeAngle * Math.PI) / 180;
-                const cosAngle = Math.cos(rad);
-                const isFacingFront = cosAngle > 0;
-
-                // Mathematics for radius (distance from center)
-                const count = filteredReels.length;
-                const radius = count > 3 
-                  ? Math.max(340, (cardWidth / 2) / Math.tan(Math.PI / count)) 
-                  : (isMobile ? 180 : 240);
-
-                // Depth effects (opacity, scale, blur, zIndex) based on angle
-                const opacity = 0.25 + 0.75 * ((cosAngle + 1) / 2);
-                const scale = 0.85 + 0.15 * ((cosAngle + 1) / 2);
-                const blur = (1 - (cosAngle + 1) / 2) * 5.5;
-                const zIndex = Math.round((cosAngle + 1) * 50);
-
-                return (
-                  <div
-                    key={reel.id}
-                    className="absolute inset-0 origin-center"
-                    style={{
-                      width: cardWidth,
-                      height: cardHeight,
-                      transform: `rotateY(${angle + rotation}deg) translateZ(${radius}px) scale(${scale})`,
-                      backfaceVisibility: 'visible',
-                      transformStyle: 'preserve-3d',
-                      zIndex,
-                      opacity,
-                      filter: `blur(${blur}px)`,
-                      pointerEvents: cosAngle > 0.35 ? 'auto' : 'none', // Disable interactions for background cards
-                      transition: isDragging ? 'none' : 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.45s, filter 0.45s',
-                    }}
-                  >
-                    <ReelCard
-                      reel={reel}
-                      isActive={activeReel === reel.id}
-                      isFacingFront={isFacingFront}
-                      onClick={() => handleCardClick(reel, cosAngle)}
-                      onVideoEnd={() => setActiveReel(null)}
-                      onOpenModal={openModal}
-                    />
-                  </div>
-                );
-              })}
-            </div>
+            {filteredReels.map((reel) => {
+              const isActive = activeReel === reel.id;
+              return (
+                <div 
+                  key={reel.id}
+                  className="snap-center shrink-0 transition-all duration-300"
+                  style={{
+                    width: cardWidth,
+                    height: cardHeight,
+                    transform: isActive ? 'scale(1.05)' : 'scale(0.95)',
+                    opacity: isActive ? 1 : 0.4,
+                  }}
+                >
+                  <ReelCard
+                    reel={reel}
+                    isActive={isActive}
+                    isFacingFront={true}
+                    onClick={() => openModal(reel)}
+                    onVideoEnd={() => setActiveReel(null)}
+                    onOpenModal={openModal}
+                  />
+                </div>
+              );
+            })}
           </div>
+        ) : (
+          /* Desktop 3D Draggable Wheel Viewport */
+          <div className="relative w-full h-[520px] flex items-center justify-center overflow-visible select-none my-6">
+            
+            {/* 3D Perspective container */}
+            <div 
+              className="w-full h-full flex items-center justify-center overflow-visible relative"
+              style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
+              onMouseDown={(e) => startDrag(e.clientX)}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              
+              {/* Carousel Wheel Ring */}
+              <div
+                className="relative flex items-center justify-center cursor-grab active:cursor-grabbing overflow-visible"
+                style={{
+                  width: cardWidth,
+                  height: cardHeight,
+                  transformStyle: 'preserve-3d',
+                }}
+              >
+                {filteredReels.map((reel, index) => {
+                  const angle = index * (360 / filteredReels.length);
+                  const relativeAngle = ((angle + rotation) % 360 + 360) % 360;
+                  
+                  // Normalise relative angle to find front factor
+                  const rad = (relativeAngle * Math.PI) / 180;
+                  const cosAngle = Math.cos(rad);
+                  const isFacingFront = cosAngle > 0;
 
-          {/* Left/Right manual click triggers */}
-          {filteredReels.length > 1 && (
-            <>
-              <button
-                onClick={handlePrev}
-                className="absolute left-2 md:left-10 z-30 w-12 h-12 rounded-full bg-neutral-900/80 backdrop-blur-md border border-white/10 hover:border-white/20 flex items-center justify-center text-white/80 hover:text-white transition-all hover:scale-105 active:scale-95"
-              >
-                <ChevronLeft size={22} />
-              </button>
-              <button
-                onClick={handleNext}
-                className="absolute right-2 md:right-10 z-30 w-12 h-12 rounded-full bg-neutral-900/80 backdrop-blur-md border border-white/10 hover:border-white/20 flex items-center justify-center text-white/80 hover:text-white transition-all hover:scale-105 active:scale-95"
-              >
-                <ChevronRight size={22} />
-              </button>
-            </>
-          )}
-        </div>
+                  // Mathematics for radius (distance from center)
+                  const count = filteredReels.length;
+                  const radius = count > 3 
+                    ? Math.max(380, ((cardWidth / 2) / Math.tan(Math.PI / count)) * 1.35) 
+                    : 300;
+
+                  // Depth effects (opacity, scale, blur, zIndex) based on angle
+                  const opacity = 0.25 + 0.75 * ((cosAngle + 1) / 2);
+                  const scale = 0.85 + 0.15 * ((cosAngle + 1) / 2);
+                  const blur = cosAngle > 0.5 ? 0 : ((0.5 - cosAngle) / 1.5) * 4.5;
+                  const zIndex = Math.round((cosAngle + 1) * 50);
+
+                  return (
+                    <div
+                      key={reel.id}
+                      className="absolute inset-0 origin-center"
+                      style={{
+                        width: cardWidth,
+                        height: cardHeight,
+                        transform: `rotateY(${angle + rotation}deg) translateZ(${radius}px) scale(${scale})`,
+                        backfaceVisibility: 'visible',
+                        transformStyle: 'preserve-3d',
+                        zIndex,
+                        opacity,
+                        filter: `blur(${blur}px)`,
+                        pointerEvents: cosAngle > 0.35 ? 'auto' : 'none', // Disable interactions for background cards
+                        transition: isDragging ? 'none' : 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.45s, filter 0.45s',
+                      }}
+                    >
+                      <ReelCard
+                        reel={reel}
+                        isActive={activeReel === reel.id}
+                        isFacingFront={isFacingFront}
+                        onClick={() => handleCardClick(reel, cosAngle)}
+                        onVideoEnd={() => setActiveReel(null)}
+                        onOpenModal={openModal}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Left/Right manual click triggers */}
+            {filteredReels.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrev}
+                  className="absolute left-10 z-30 w-12 h-12 rounded-full bg-neutral-900/80 backdrop-blur-md border border-white/10 hover:border-white/20 flex items-center justify-center text-white/80 hover:text-white transition-all hover:scale-105 active:scale-95"
+                >
+                  <ChevronLeft size={22} />
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="absolute right-10 z-30 w-12 h-12 rounded-full bg-neutral-900/80 backdrop-blur-md border border-white/10 hover:border-white/20 flex items-center justify-center text-white/80 hover:text-white transition-all hover:scale-105 active:scale-95"
+                >
+                  <ChevronRight size={22} />
+                </button>
+              </>
+            )}
+          </div>
+        )}
 
         {/* Empty state */}
         <AnimatePresence>
@@ -699,7 +792,9 @@ const ShowreelSection = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           <p className="text-[10px] text-white/25 uppercase tracking-widest font-bold">
-            DRAG LEFT OR RIGHT TO SPIN THE WHEEL · CLICK FRONT VIDEO TO VIEW FULLSCREEN · PRESS ESC TO CLOSE
+            {isMobile 
+              ? "SWIPE LEFT OR RIGHT · TAP ACTIVE VIDEO TO VIEW FULLSCREEN"
+              : "DRAG LEFT OR RIGHT TO SPIN THE WHEEL · CLICK FRONT VIDEO TO VIEW FULLSCREEN · PRESS ESC TO CLOSE"}
           </p>
         </motion.div>
       </div>
