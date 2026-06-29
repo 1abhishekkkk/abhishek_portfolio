@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Play } from 'lucide-react';
 
 // Full unified reels dataset with brand/category tags
 const ALL_REELS = [
@@ -118,81 +118,43 @@ const FILTERS = [
 ];
 
 // ---------- Reel Card ----------
-const ReelCard = ({ reel, isActive, isFacingFront, onClick, onVideoEnd, onOpenModal }) => {
+const ReelCard = ({ reel, onOpenModal }) => {
   const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showControls, setShowControls] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isActive && isFacingFront) {
-      // Auto play muted when in center front
-      video.muted = true;
-      video.play().then(() => {
-        setIsPlaying(true);
-      }).catch(err => console.log('Autoplay blocked:', err));
-      setShowControls(true);
-    } else {
-      video.pause();
-      setIsPlaying(false);
-      setShowControls(false);
-    }
-  }, [isActive, isFacingFront]);
-
-  const handlePlayPause = (e) => {
-    e.stopPropagation();
-    const video = videoRef.current;
-    if (!video) return;
-    if (isPlaying) {
-      video.pause();
-      setIsPlaying(false);
-    } else {
-      video.play();
-      setIsPlaying(true);
-    }
-  };
-
-  const handleVideoLoaded = () => {
-    setVideoLoaded(true);
-    const video = videoRef.current;
-    if (video && isActive && isFacingFront) {
-      video.muted = true;
-      video.play().then(() => {
-        setIsPlaying(true);
-      }).catch(err => console.log('Autoplay blocked:', err));
-    }
-  };
 
   const brandFilter = FILTERS.find(f => f.id === reel.brand);
   const accentColor = brandFilter?.color || '#f59e0b';
 
   return (
-    <div
-      className="relative w-full h-full rounded-2xl overflow-hidden bg-neutral-900 border border-white/10 hover:border-white/20 transition-colors shadow-2xl flex flex-col justify-between"
-      style={isActive && isFacingFront ? { boxShadow: `0 0 24px -4px ${accentColor}40`, border: `2px solid ${accentColor}` } : {}}
+    <motion.div
+      className="relative w-full aspect-[9/16] rounded-2xl overflow-hidden bg-neutral-900 border border-white/5 cursor-pointer group shadow-2xl"
+      style={{
+        borderColor: isHovered ? accentColor : 'rgba(255,255,255,0.05)',
+        boxShadow: isHovered ? `0 0 20px -2px ${accentColor}30` : 'none',
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={onClick}
+      onClick={() => onOpenModal(reel)}
+      whileHover={{ y: -6, scale: 1.02 }}
+      transition={{ duration: 0.3 }}
+      layout
     >
-      {/* Video Container */}
-      <div className="relative w-full h-full overflow-hidden bg-black">
+      <div className="relative w-full h-full bg-black">
         <video
           ref={videoRef}
           className="w-full h-full object-cover pointer-events-none"
           loop
           muted
           playsInline
+          autoPlay
           preload="metadata"
-          onEnded={onVideoEnd}
-          onLoadedData={handleVideoLoaded}
-          onError={() => console.log('Video failed to load:', reel.src)}
-        >
-          <source src={reel.src} type="video/mp4" />
-        </video>
+          onLoadedData={(e) => {
+            setVideoLoaded(true);
+            e.target.play().catch(err => console.log('Autoplay blocked:', err));
+          }}
+          src={reel.src}
+        />
 
         {/* Loading Placeholder */}
         {!videoLoaded && (
@@ -202,10 +164,17 @@ const ReelCard = ({ reel, isActive, isFacingFront, onClick, onVideoEnd, onOpenMo
         )}
 
         {/* Overlay Darkener */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-black/95" />
+
+        {/* Play indicator overlay on hover */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/25 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-300">
+            <Play className="w-5 h-5 text-white ml-0.5" fill="white" />
+          </div>
+        </div>
 
         {/* Brand type badge */}
-        <div className="absolute top-4 left-4 pointer-events-none">
+        <div className="absolute top-3 left-3 pointer-events-none z-10">
           <span
             className="text-[8px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full backdrop-blur-md"
             style={{ backgroundColor: `${accentColor}18`, color: accentColor, border: `1.5px solid ${accentColor}35` }}
@@ -215,88 +184,20 @@ const ReelCard = ({ reel, isActive, isFacingFront, onClick, onVideoEnd, onOpenMo
         </div>
 
         {/* Title overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 pointer-events-none flex flex-col justify-end">
-          <h3 className="text-white font-black text-sm leading-tight tracking-tight uppercase mb-1">{reel.title}</h3>
-          <p className="text-[10px] text-white/50 tracking-wider font-semibold uppercase">{reel.brand}</p>
+        <div className="absolute bottom-0 left-0 right-0 p-4 pointer-events-none z-10 flex flex-col justify-end">
+          <h3 className="text-white font-black text-xs md:text-sm leading-tight tracking-tight uppercase mb-0.5">{reel.title}</h3>
+          <p className="text-[9px] text-white/50 tracking-wider font-semibold uppercase">{reel.brand}</p>
         </div>
-
-        {/* Play/Pause & Maximize button */}
-        <AnimatePresence>
-          {isActive && isFacingFront && showControls && (
-            <motion.div
-              className="absolute inset-0 flex items-center justify-center gap-3 bg-black/35 z-10"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <button
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full p-3.5 text-white hover:scale-110 active:scale-95 transition-transform"
-                onClick={handlePlayPause}
-              >
-                {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-              </button>
-              <button
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full p-3.5 text-white hover:scale-110 active:scale-95 transition-transform"
-                onClick={(e) => { e.stopPropagation(); onOpenModal(reel); }}
-              >
-                <Maximize2 size={20} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Unmute Indicator hint */}
-        <AnimatePresence>
-          {isFacingFront && isHovered && !isActive && (
-            <motion.div
-              className="absolute bottom-4 right-4 z-10"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-            >
-              <div className="bg-black/85 backdrop-blur-md rounded-full px-3 py-1 text-[8px] font-bold text-white uppercase tracking-widest flex items-center gap-1.5 border border-white/15">
-                <VolumeX size={10} /> Play Fullscreen
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
 // ---------- Main Section ----------
 const ShowreelSection = () => {
   const [activeFilter, setActiveFilter] = useState('all');
-  const [activeReel, setActiveReel] = useState(null);
   const [modalReel, setModalReel] = useState(null);
-  const sectionRef = useRef(null);
   const modalVideoRef = useRef(null);
-  const filterRef = useRef(null);
-  const mobileScrollRef = useRef(null);
-
-  // 3D Carousel State
-  const [rotation, setRotation] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStartX = useRef(0);
-  const dragStartRotation = useRef(0);
-  const dragDistance = useRef(0);
-  const dragVelocity = useRef(0);
-  const lastTime = useRef(0);
-  const lastX = useRef(0);
-
-  // Responsive sizes
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const isMobile = windowWidth < 768;
-  const cardWidth = isMobile ? 145 : 190;
-  const cardHeight = isMobile ? 225 : 295;
 
   const filteredReels = activeFilter === 'all'
     ? ALL_REELS
@@ -313,209 +214,6 @@ const ShowreelSection = () => {
 
   const handleFilterChange = (filterId) => {
     setActiveFilter(filterId);
-    setRotation(0); // Reset wheel rotation on filter change
-    setActiveReel(null);
-  };
-
-  // Drag Gesture Handlers
-  const startDrag = useCallback((clientX) => {
-    setIsDragging(true);
-    dragStartX.current = clientX;
-    dragStartRotation.current = rotation;
-    dragDistance.current = 0;
-    dragVelocity.current = 0;
-    lastX.current = clientX;
-    lastTime.current = performance.now();
-  }, [rotation]);
-
-  const moveDrag = useCallback((clientX) => {
-    if (!isDragging) return;
-    const deltaX = clientX - dragStartX.current;
-    dragDistance.current = deltaX;
-
-    const now = performance.now();
-    const dt = now - lastTime.current;
-    if (dt > 0) {
-      const dx = clientX - lastX.current;
-      dragVelocity.current = dx / dt;
-    }
-    lastX.current = clientX;
-    lastTime.current = now;
-
-    // Apply drag rotation (1px drag = 0.35 deg rotation)
-    setRotation(dragStartRotation.current + deltaX * 0.35);
-  }, [isDragging]);
-
-  const endDrag = useCallback(() => {
-    setIsDragging(false);
-
-    // Apply smooth inertia spin
-    if (Math.abs(dragVelocity.current) > 0.1) {
-      let speed = dragVelocity.current * 10;
-      const decay = 0.94;
-
-      const spin = () => {
-        if (isDragging) return; // Interrupt if user starts dragging again
-        setRotation(prev => prev + speed);
-        speed *= decay;
-        if (Math.abs(speed) > 0.05) {
-          requestAnimationFrame(spin);
-        }
-      };
-      requestAnimationFrame(spin);
-    }
-  }, [isDragging]);
-
-  const handleTouchStart = (e) => {
-    startDrag(e.touches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    moveDrag(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    endDrag();
-  };
-
-  // Global mouse event listener for dragging
-  useEffect(() => {
-    const handleGlobalMouseMove = (e) => {
-      if (isDragging) moveDrag(e.clientX);
-    };
-    const handleGlobalMouseUp = () => {
-      if (isDragging) endDrag();
-    };
-
-    if (isDragging) {
-      window.addEventListener('mousemove', handleGlobalMouseMove);
-      window.addEventListener('mouseup', handleGlobalMouseUp);
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleGlobalMouseMove);
-      window.removeEventListener('mouseup', handleGlobalMouseUp);
-    };
-  }, [isDragging, moveDrag, endDrag]);
-
-  // Auto-rotation when idle (Desktop only)
-  useEffect(() => {
-    if (isMobile) return;
-    let animationId;
-    let lastTick = performance.now();
-
-    const tick = (now) => {
-      const dt = now - lastTick;
-      lastTick = now;
-
-      if (!isDragging) {
-        // Slow constant rotate (2.5 degrees per second)
-        setRotation(prev => (prev - 0.012 * dt) % 360);
-      }
-
-      animationId = requestAnimationFrame(tick);
-    };
-
-    animationId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(animationId);
-  }, [isDragging, isMobile]);
-
-  // Identify active (centered) card for desktop
-  useEffect(() => {
-    if (isMobile || filteredReels.length === 0) return;
-
-    let closestReelId = null;
-    let maxCos = -2;
-
-    filteredReels.forEach((reel, index) => {
-      const angle = index * (360 / filteredReels.length);
-      const relativeAngle = ((angle + rotation) % 360 + 360) % 360;
-      const rad = (relativeAngle * Math.PI) / 180;
-      const cosAngle = Math.cos(rad);
-
-      // Card closest to front (cosAngle = 1)
-      if (cosAngle > maxCos) {
-        maxCos = cosAngle;
-        closestReelId = reel.id;
-      }
-    });
-
-    setActiveReel(closestReelId);
-  }, [rotation, filteredReels, activeFilter, isMobile]);
-
-  // Mobile scroll handler to identify centered card
-  const handleMobileScroll = () => {
-    if (!mobileScrollRef.current || filteredReels.length === 0) return;
-    const container = mobileScrollRef.current;
-    const scrollLeft = container.scrollLeft;
-    const containerWidth = container.offsetWidth;
-    const center = scrollLeft + containerWidth / 2;
-
-    let closestReelId = null;
-    let minDiff = Infinity;
-
-    const children = container.children;
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-      const childCenter = child.offsetLeft + child.offsetWidth / 2;
-      const diff = Math.abs(center - childCenter);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestReelId = filteredReels[i]?.id;
-      }
-    }
-
-    if (closestReelId !== null && closestReelId !== activeReel) {
-      setActiveReel(closestReelId);
-    }
-  };
-
-  // Reset scroll and set active reel on filter changes for mobile
-  useEffect(() => {
-    if (isMobile && mobileScrollRef.current) {
-      mobileScrollRef.current.scrollLeft = 0;
-      if (filteredReels.length > 0) {
-        setActiveReel(filteredReels[0].id);
-      } else {
-        setActiveReel(null);
-      }
-    }
-  }, [activeFilter, isMobile, filteredReels]);
-
-  // Card click handler
-  const handleCardClick = (reel, cosAngle) => {
-    // Only trigger modal if not a drag action
-    if (Math.abs(dragDistance.current) < 5) {
-      // If it's facing away, spin the wheel to bring it to front
-      if (cosAngle < 0.8) {
-        const index = filteredReels.findIndex(r => r.id === reel.id);
-        const cardAngle = index * (360 / filteredReels.length);
-        
-        // Find shortest path rotation
-        const currentMod = rotation % 360;
-        const targetRotation = -cardAngle;
-        let diff = (targetRotation - currentMod) % 360;
-        if (diff > 180) diff -= 360;
-        if (diff < -180) diff += 360;
-
-        setRotation(prev => prev + diff);
-      } else {
-        openModal(reel);
-      }
-    }
-  };
-
-  // Nav Button handlers
-  const handlePrev = (e) => {
-    e.stopPropagation();
-    const step = 360 / (filteredReels.length || 1);
-    setRotation(prev => prev + step);
-  };
-
-  const handleNext = (e) => {
-    e.stopPropagation();
-    const step = 360 / (filteredReels.length || 1);
-    setRotation(prev => prev - step);
   };
 
   // ESC key listener
@@ -534,7 +232,7 @@ const ShowreelSection = () => {
   }, [modalReel]);
 
   return (
-    <section ref={sectionRef} id="showreel" className="py-24 px-6 bg-transparent overflow-hidden">
+    <section id="showreel" className="py-24 px-6 bg-transparent overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
 
         {/* Section Header */}
@@ -557,13 +255,12 @@ const ShowreelSection = () => {
             Showreel
           </h2>
           <p className="text-lg text-white/60 max-w-2xl mx-auto font-medium">
-            Drag to rotate and explore commercial edits, brand launch edits, and behind the scenes.
+            Explore commercial edits, brand launch edits, and behind the scenes.
           </p>
         </motion.div>
 
         {/* ---- Filter Tabs ---- */}
         <motion.div
-          ref={filterRef}
           className="flex flex-wrap items-center justify-center gap-2 mb-10"
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -614,7 +311,7 @@ const ShowreelSection = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeFilter}
-            className="flex items-center justify-center gap-3 mb-4"
+            className="flex items-center justify-center gap-3 mb-8"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
@@ -639,138 +336,26 @@ const ShowreelSection = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* ---- Viewport ---- */}
-        {isMobile ? (
-          /* Mobile Flat Swipe Carousel */
-          <div 
-            ref={mobileScrollRef}
-            onScroll={handleMobileScroll}
-            className="w-full flex gap-5 overflow-x-auto snap-x snap-mandatory px-[calc(50vw-105px)] py-8 scrollbar-none my-6 select-none"
-            style={{ 
-              scrollbarWidth: 'none', 
-              msOverflowStyle: 'none',
-              scrollBehavior: 'smooth'
-            }}
-          >
-            {filteredReels.map((reel) => {
-              const isActive = activeReel === reel.id;
-              return (
-                <div 
-                  key={reel.id}
-                  className="snap-center shrink-0 transition-all duration-300"
-                  style={{
-                    width: cardWidth,
-                    height: cardHeight,
-                    transform: isActive ? 'scale(1.05)' : 'scale(0.95)',
-                    opacity: isActive ? 1 : 0.4,
-                  }}
-                >
-                  <ReelCard
-                    reel={reel}
-                    isActive={isActive}
-                    isFacingFront={true}
-                    onClick={() => openModal(reel)}
-                    onVideoEnd={() => setActiveReel(null)}
-                    onOpenModal={openModal}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          /* Desktop 3D Draggable Wheel Viewport */
-          <div className="relative w-full h-[520px] flex items-center justify-center overflow-visible select-none my-6">
-            
-            {/* 3D Perspective container */}
-            <div 
-              className="w-full h-full flex items-center justify-center overflow-visible relative"
-              style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
-              onMouseDown={(e) => startDrag(e.clientX)}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-            >
-              
-              {/* Carousel Wheel Ring */}
-              <div
-                className="relative flex items-center justify-center cursor-grab active:cursor-grabbing overflow-visible"
-                style={{
-                  width: cardWidth,
-                  height: cardHeight,
-                  transformStyle: 'preserve-3d',
-                }}
+        {/* ---- Video Grid ---- */}
+        <motion.div 
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6"
+          layout
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredReels.map((reel) => (
+              <motion.div
+                key={reel.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                layout
               >
-                {filteredReels.map((reel, index) => {
-                  const angle = index * (360 / filteredReels.length);
-                  const relativeAngle = ((angle + rotation) % 360 + 360) % 360;
-                  
-                  // Normalise relative angle to find front factor
-                  const rad = (relativeAngle * Math.PI) / 180;
-                  const cosAngle = Math.cos(rad);
-                  const isFacingFront = cosAngle > 0;
-
-                  // Mathematics for radius (distance from center)
-                  const count = filteredReels.length;
-                  const radius = count > 3 
-                    ? Math.max(380, ((cardWidth / 2) / Math.tan(Math.PI / count)) * 1.35) 
-                    : 300;
-
-                  // Depth effects (opacity, scale, blur, zIndex) based on angle
-                  const opacity = 0.25 + 0.75 * ((cosAngle + 1) / 2);
-                  const scale = 0.85 + 0.15 * ((cosAngle + 1) / 2);
-                  const blur = cosAngle > 0.5 ? 0 : ((0.5 - cosAngle) / 1.5) * 4.5;
-                  const zIndex = Math.round((cosAngle + 1) * 50);
-
-                  return (
-                    <div
-                      key={reel.id}
-                      className="absolute inset-0 origin-center"
-                      style={{
-                        width: cardWidth,
-                        height: cardHeight,
-                        transform: `rotateY(${angle + rotation}deg) translateZ(${radius}px) scale(${scale})`,
-                        backfaceVisibility: 'visible',
-                        transformStyle: 'preserve-3d',
-                        zIndex,
-                        opacity,
-                        filter: `blur(${blur}px)`,
-                        pointerEvents: cosAngle > 0.35 ? 'auto' : 'none', // Disable interactions for background cards
-                        transition: isDragging ? 'none' : 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.45s, filter 0.45s',
-                      }}
-                    >
-                      <ReelCard
-                        reel={reel}
-                        isActive={activeReel === reel.id}
-                        isFacingFront={isFacingFront}
-                        onClick={() => handleCardClick(reel, cosAngle)}
-                        onVideoEnd={() => setActiveReel(null)}
-                        onOpenModal={openModal}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Left/Right manual click triggers */}
-            {filteredReels.length > 1 && (
-              <>
-                <button
-                  onClick={handlePrev}
-                  className="absolute left-10 z-30 w-12 h-12 rounded-full bg-neutral-900/80 backdrop-blur-md border border-white/10 hover:border-white/20 flex items-center justify-center text-white/80 hover:text-white transition-all hover:scale-105 active:scale-95"
-                >
-                  <ChevronLeft size={22} />
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="absolute right-10 z-30 w-12 h-12 rounded-full bg-neutral-900/80 backdrop-blur-md border border-white/10 hover:border-white/20 flex items-center justify-center text-white/80 hover:text-white transition-all hover:scale-105 active:scale-95"
-                >
-                  <ChevronRight size={22} />
-                </button>
-              </>
-            )}
-          </div>
-        )}
+                <ReelCard reel={reel} onOpenModal={openModal} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
 
         {/* Empty state */}
         <AnimatePresence>
@@ -785,16 +370,14 @@ const ShowreelSection = () => {
 
         {/* Hint */}
         <motion.div
-          className="text-center mt-12"
+          className="text-center mt-16"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           <p className="text-[10px] text-white/25 uppercase tracking-widest font-bold">
-            {isMobile 
-              ? "SWIPE LEFT OR RIGHT · TAP ACTIVE VIDEO TO VIEW FULLSCREEN"
-              : "DRAG LEFT OR RIGHT TO SPIN THE WHEEL · CLICK FRONT VIDEO TO VIEW FULLSCREEN · PRESS ESC TO CLOSE"}
+            HOVER OVER A CARD TO PREVIEW · CLICK TO PLAY FULLSCREEN WITH SOUND · PRESS ESC TO CLOSE
           </p>
         </motion.div>
       </div>
@@ -889,7 +472,6 @@ const ShowreelSection = () => {
                   <h3 className="text-xl font-black text-white mb-1 tracking-tighter">{modalReel.title}</h3>
                   <div className="flex items-center gap-3 text-xs text-neutral-300">
                     <span className="flex items-center gap-1"><Play size={12} /> Video Reel</span>
-                    <span className="flex items-center gap-1"><Volume2 size={12} /> Sound On</span>
                   </div>
                 </div>
 
@@ -905,8 +487,8 @@ const ShowreelSection = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      </section>
-    );
-  };
+    </section>
+  );
+};
 
 export default ShowreelSection;
