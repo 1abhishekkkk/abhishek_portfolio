@@ -5,27 +5,6 @@ import { Play } from 'lucide-react';
 // Full unified reels dataset with brand/category tags
 const ALL_REELS = [
   {
-    id: 10,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1780988936/reels/ishan-kishan.mp4",
-    title: "Ishan Kishan - Cricket Edit",
-    brand: "sports",
-    type: "Sports Edit",
-  },
-  {
-    id: 4,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628896/reels/realme-15pro-launch-new.mp4",
-    title: "Realme 15 Pro Launch",
-    brand: "realme",
-    type: "Launch Campaign",
-  },
-  {
-    id: 5,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628714/reels/honor-brand.mp4",
-    title: "Honor Brand Commercial",
-    brand: "honor",
-    type: "Brand Commercial",
-  },
-  {
     id: 0,
     src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777740056/reels/fuse-2-render.mp4",
     title: "Fuse Bangalore 2 Render",
@@ -45,6 +24,27 @@ const ALL_REELS = [
     title: "Fuse BTS Final",
     brand: "fuse",
     type: "Behind the Scenes",
+  },
+  {
+    id: 10,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1780988936/reels/ishan-kishan.mp4",
+    title: "Ishan Kishan - Cricket Edit",
+    brand: "sports",
+    type: "Sports Edit",
+  },
+  {
+    id: 4,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628896/reels/realme-15pro-launch-new.mp4",
+    title: "Realme 15 Pro Launch",
+    brand: "realme",
+    type: "Launch Campaign",
+  },
+  {
+    id: 5,
+    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628714/reels/honor-brand.mp4",
+    title: "Honor Brand Commercial",
+    brand: "honor",
+    type: "Brand Commercial",
   },
   {
     id: 12,
