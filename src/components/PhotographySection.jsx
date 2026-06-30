@@ -1,32 +1,50 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ─── SHOWREEL THUMBNAILS ──────────────────────────────────────────────────────
-// Auto-extracted from Cloudinary videos using f_jpg + so_ (seek offset) transform
-const BASE = "https://res.cloudinary.com/de6kkxnqn/video/upload";
-const thumb = (version, id, seek = 1) =>
-  `${BASE}/so_${seek},w_420,h_590,c_fill,f_jpg,q_85/${version}/${id}.jpg`;
-
+// ─── PHOTOBOOTH IMAGES FROM LOCAL DIRECTORY ─────────────────────────────────
 const PHOTO_IMAGES = [
-  thumb("v1777628884", "reels/realme-11pro",          1),
-  thumb("v1777628901", "reels/realme-15pro-launch",   2),
-  thumb("v1777628896", "reels/realme-15pro-launch-new", 3),
-  thumb("v1777628685", "reels/fuse-brand-edit",       1),
-  thumb("v1777628710", "reels/fuse-bts-final",        2),
-  thumb("v1777628645", "reels/fuse-bangalore",        1),
-  thumb("v1777739610", "reels/shreyanka-x-duroflex",  2),
-  thumb("v1777628879", "reels/oneplus-final",         1),
-  thumb("v1777628375", "reels/fashion-gurav",         1),
-  thumb("v1777628714", "reels/honor-brand",           2),
-  thumb("v1780988936", "reels/ishan-kishan",          1),
+  "/images/photobooth/1111.jpg",
+  "/images/photobooth/2222.jpg",
+  "/images/photobooth/1769481287074.jpg",
+  "/images/photobooth/1769481313631.jpg",
+  "/images/photobooth/1769481339393.jpg",
+  "/images/photobooth/1769481441320.jpg",
+  "/images/photobooth/1769481445154.jpg",
+  "/images/photobooth/1769481446115.jpg",
+  "/images/photobooth/1769481526115.jpg",
+  "/images/photobooth/1769481651875.jpg",
+  "/images/photobooth/IMG_20251027_211512.jpg",
+  "/images/photobooth/IMG_20260119_100707.jpg",
+  "/images/photobooth/IMG_20260119_100720.jpg",
+  "/images/photobooth/IMG_20260119_100742.jpg",
+  "/images/photobooth/IMG_20260119_101302.jpg",
+  "/images/photobooth/IMG_20260119_143858.jpg",
+  "/images/photobooth/IMG_20260119_143939.jpg",
+  "/images/photobooth/IMG_20260119_144213.jpg",
+  "/images/photobooth/IMG_20260119_144305.jpg",
+  "/images/photobooth/IMG_20260119_160556.jpg",
+  "/images/photobooth/IMG_20260119_160927.jpg",
+  "/images/photobooth/IMG_20260119_215945.jpg",
+  "/images/photobooth/IMG_20260119_221452.jpg",
+  "/images/photobooth/IMG_20260225_230857.jpg",
+  "/images/photobooth/IMG_20260225_232153.jpg",
+  "/images/photobooth/IMG_20260225_232524.jpg",
+  "/images/photobooth/IMG_20260301_083411.jpg",
+  "/images/photobooth/IMG_20260303_111810.jpg",
+  "/images/photobooth/IMG_20260311_005148.jpg",
+  "/images/photobooth/IMG_20260311_005947.jpg",
+  "/images/photobooth/IMG_20260313_205105.jpg",
+  "/images/photobooth/IMG_20260313_205119.jpg",
+  "/images/photobooth/IMG_20260315_014838.jpg",
+  "/images/photobooth/IMG_20260315_021133.jpg"
 ];
 
 const CARD_W = 190;
 const CARD_H = 265;
-const DISTANCE_THRESHOLD = 72;
-const DISMISS_DELAY = 1100;
+const DISTANCE_THRESHOLD = 60;
+const DISMISS_DELAY = 1000;
 
-// ─── SECTION-SCOPED MOUSE TRAIL ───────────────────────────────────────────────
+// ─── SECTION-SCOPED MOUSE & TOUCH TRAIL ──────────────────────────────────────
 function SectionMouseTrail({ containerRef }) {
   const [cards, setCards] = useState([]);
   const lastPos = useRef({ x: 0, y: 0 });
@@ -36,10 +54,10 @@ function SectionMouseTrail({ containerRef }) {
     const el = containerRef.current;
     if (!el) return;
 
-    const handleMove = (e) => {
+    const handleMove = (clientX, clientY) => {
       const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
 
       // Keep cards away from edges so they never clip
       const safeX = Math.min(Math.max(x, CARD_W / 2 + 10), rect.width - CARD_W / 2 - 10);
@@ -51,7 +69,7 @@ function SectionMouseTrail({ containerRef }) {
       if (dist < DISTANCE_THRESHOLD) return;
 
       lastPos.current = { x, y };
-      const tilt = (Math.random() - 0.5) * 18;
+      const tilt = (Math.random() - 0.5) * 16;
 
       const card = {
         id: Date.now() + Math.random(),
@@ -67,8 +85,22 @@ function SectionMouseTrail({ containerRef }) {
       }, DISMISS_DELAY);
     };
 
-    el.addEventListener("mousemove", handleMove);
-    return () => el.removeEventListener("mousemove", handleMove);
+    const onMouseMove = (e) => handleMove(e.clientX, e.clientY);
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches[0]) {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    el.addEventListener("mousemove", onMouseMove);
+    el.addEventListener("touchmove", onTouchMove, { passive: true });
+    el.addEventListener("touchstart", onTouchMove, { passive: true });
+
+    return () => {
+      el.removeEventListener("mousemove", onMouseMove);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchstart", onTouchMove);
+    };
   }, [containerRef]);
 
   return (
@@ -76,14 +108,14 @@ function SectionMouseTrail({ containerRef }) {
       {cards.map((card) => (
         <motion.div
           key={card.id}
-          initial={{ scale: 0, opacity: 0, rotate: card.tilt }}
-          animate={{ scale: 1, opacity: 1, rotate: card.tilt }}
-          exit={{ scale: 0.72, opacity: 0, y: 20, transition: { duration: 0.35, ease: "easeIn" } }}
-          transition={{ type: "spring", stiffness: 280, damping: 22 }}
+          initial={{ scale: 0, opacity: 0, rotate: card.tilt, x: card.x, y: card.y }}
+          animate={{ scale: 1, opacity: 1, rotate: card.tilt, x: card.x, y: card.y }}
+          exit={{ scale: 0.72, opacity: 0, y: card.y + 20, transition: { duration: 0.3, ease: "easeIn" } }}
+          transition={{ type: "spring", stiffness: 300, damping: 24 }}
           style={{
             position: "absolute",
-            left: card.x,
-            top: card.y,
+            left: 0,
+            top: 0,
             translateX: "-50%",
             translateY: "-50%",
             width: CARD_W,
@@ -93,7 +125,7 @@ function SectionMouseTrail({ containerRef }) {
             pointerEvents: "none",
             zIndex: 20,
             boxShadow:
-              "0 28px 70px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.06)",
+              "0 24px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)",
             willChange: "transform, opacity",
           }}
         >
@@ -114,7 +146,7 @@ function SectionMouseTrail({ containerRef }) {
               position: "absolute",
               inset: 0,
               background:
-                "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%)",
+                "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.5) 100%)",
             }}
           />
         </motion.div>
@@ -126,24 +158,40 @@ function SectionMouseTrail({ containerRef }) {
 // ─── CUSTOM CURSOR RING ───────────────────────────────────────────────────────
 function CursorRing({ containerRef }) {
   const [pos, setPos] = useState({ x: -100, y: -100 });
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+
     const move = (e) => {
       const rect = el.getBoundingClientRect();
       setPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     };
+
+    const detectTouch = () => {
+      setIsTouch(true);
+    };
+
     el.addEventListener("mousemove", move);
-    return () => el.removeEventListener("mousemove", move);
+    el.addEventListener("touchstart", detectTouch, { passive: true });
+
+    return () => {
+      el.removeEventListener("mousemove", move);
+      el.removeEventListener("touchstart", detectTouch);
+    };
   }, [containerRef]);
+
+  if (isTouch) return null; // Don't show custom cursor on mobile touch screens
 
   return (
     <motion.div
       animate={{ x: pos.x - 20, y: pos.y - 20 }}
-      transition={{ type: "spring", stiffness: 500, damping: 32, mass: 0.4 }}
+      transition={{ type: "spring", stiffness: 600, damping: 35, mass: 0.3 }}
       style={{
         position: "absolute",
+        left: 0,
+        top: 0,
         width: 40,
         height: 40,
         borderRadius: "50%",
@@ -157,7 +205,7 @@ function CursorRing({ containerRef }) {
 }
 
 // ─── MAIN PHOTOGRAPHY SECTION ─────────────────────────────────────────────────
-const NEUTRAL_950 = "#0a0a0a"; // matches Tailwind neutral-950 / rest of the site
+const NEUTRAL_950 = "#0a0a0a"; // matches Tailwind neutral-950
 
 export default function PhotographySection() {
   const sectionRef = useRef(null);
@@ -173,16 +221,14 @@ export default function PhotographySection() {
       onMouseLeave={() => setHovered(false)}
       style={{
         position: "relative",
-        // overflow MUST stay hidden to scope the trail, but safe positions prevent clipping
         overflow: "hidden",
-        // Match the rest of the site exactly
         background: NEUTRAL_950,
         minHeight: "88vh",
         cursor: hovered ? "none" : "default",
       }}
       className="flex flex-col items-center justify-center py-28 px-6"
     >
-      {/* ── Gradient fade from neutral-950 at TOP (seamless join with StatsSection) */}
+      {/* Gradient fade from neutral-950 at TOP */}
       <div
         aria-hidden="true"
         style={{
@@ -197,7 +243,7 @@ export default function PhotographySection() {
         }}
       />
 
-      {/* ── Gradient fade to neutral-950 at BOTTOM (seamless join with About Me) */}
+      {/* Gradient fade to neutral-950 at BOTTOM */}
       <div
         aria-hidden="true"
         style={{
@@ -222,10 +268,10 @@ export default function PhotographySection() {
         }}
       />
 
-      {/* Trail cards — z-index 20, below fades (z10 fades only cover edges) */}
+      {/* Trail cards */}
       <SectionMouseTrail containerRef={sectionRef} />
 
-      {/* Content — z-index 30, always on top of cards */}
+      {/* Content */}
       <div className="relative z-30 text-center max-w-4xl mx-auto pointer-events-none select-none">
         <motion.p
           initial={{ opacity: 0, y: 14 }}
@@ -263,7 +309,7 @@ export default function PhotographySection() {
           viewport={{ once: true }}
           className="text-white/35 text-sm font-light tracking-wide mb-10"
         >
-          Move your cursor to explore the photography.
+          Move your cursor or touch to explore the photography.
         </motion.p>
 
         <motion.div
