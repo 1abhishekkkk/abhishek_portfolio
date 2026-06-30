@@ -18,6 +18,7 @@ const StatsSection = React.lazy(() => import('./components/StatsSection'));
 const LoadingScreen = React.lazy(() => import('./components/LoadingScreen'));
 const TestimonialsSection = React.lazy(() => import('./components/TestimonialsSection'));
 const WorkProcessSection = React.lazy(() => import('./components/WorkProcessSection'));
+const MouseTrail = React.lazy(() => import('./components/MouseTrail'));
 
 const BrandProofSection = () => (
   <section className="py-24 px-6 bg-neutral-950 border-y border-white/5">
@@ -652,6 +653,11 @@ const App = () => {
 
       {/* Toast Notifications */}
       <Toasts />
+
+      {/* Mouse Trail — portfolio images follow cursor */}
+      <Suspense fallback={null}>
+        <MouseTrail />
+      </Suspense>
     </div>
   );
 };
