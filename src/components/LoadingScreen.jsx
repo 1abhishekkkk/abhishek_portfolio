@@ -1,86 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Spline from '@splinetool/react-spline';
 
 const GRAIN = `data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E`;
 
+// Floating orb configs — mimic the Spline aesthetic with pure CSS
+const ORBS = [
+  {
+    id: 1,
+    size: 420,
+    x: '50%',
+    y: '50%',
+    tx: '-50%',
+    ty: '-50%',
+    colors: ['#c97c3a', '#4a6fa5', '#7a4a8a'],
+    blur: 60,
+    duration: 8,
+    delay: 0,
+  },
+  {
+    id: 2,
+    size: 220,
+    x: '70%',
+    y: '25%',
+    tx: '-50%',
+    ty: '-50%',
+    colors: ['#6b6b6b', '#4a4a4a', '#888'],
+    blur: 40,
+    duration: 10,
+    delay: 1,
+  },
+  {
+    id: 3,
+    size: 200,
+    x: '30%',
+    y: '68%',
+    tx: '-50%',
+    ty: '-50%',
+    colors: ['#555', '#3a3a3a', '#777'],
+    blur: 35,
+    duration: 12,
+    delay: 0.5,
+  },
+];
+
 const LoadingScreen = ({ onComplete }) => {
   const [isExiting, setIsExiting] = useState(false);
-  const [splineLoaded, setSplineLoaded] = useState(false);
-
-  useEffect(() => {
-    const hideSplineLogo = () => {
-      const styleContent = `
-        #logo, a[href*="spline.design"], [class*="logo"], [id*="logo"] {
-          display: none !important;
-          opacity: 0 !important;
-          visibility: hidden !important;
-          pointer-events: none !important;
-        }
-      `;
-
-      const injectStyle = (root) => {
-        if (!root) return;
-        if (root.querySelector && !root.querySelector('#hide-spline-style')) {
-          const style = document.createElement('style');
-          style.id = 'hide-spline-style';
-          style.textContent = styleContent;
-          root.appendChild(style);
-        }
-      };
-
-      const traverse = (node) => {
-        if (!node) return;
-
-        // If node has a shadowRoot, inject style and traverse inside it
-        if (node.shadowRoot) {
-          injectStyle(node.shadowRoot);
-          traverse(node.shadowRoot);
-        }
-
-        // Direct removal fallback
-        try {
-          if (node.querySelector) {
-            const logo = node.querySelector('#logo') || 
-                         node.querySelector('a[href*="spline.design"]') || 
-                         node.querySelector('[class*="logo"]') || 
-                         node.querySelector('[id*="logo"]');
-            if (logo) {
-              logo.style.display = 'none';
-              logo.style.opacity = '0';
-              logo.style.visibility = 'hidden';
-              logo.style.pointerEvents = 'none';
-              logo.remove();
-            }
-          }
-        } catch {
-          // Ignore DOM exceptions during recursive tree traversal
-        }
-
-        // Traverse child nodes recursively
-        const children = node.children || node.childNodes;
-        if (children) {
-          for (let i = 0; i < children.length; i++) {
-            traverse(children[i]);
-          }
-        }
-      };
-
-      // Start traversing from document body
-      traverse(document.body);
-
-      // Inject into main document head as backup
-      injectStyle(document.head);
-    };
-
-    const interval = setInterval(hideSplineLogo, 100);
-    const timeout = setTimeout(() => clearInterval(interval), 10000);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  }, []);
 
   const handleEnter = () => {
     setIsExiting(true);
@@ -105,18 +69,38 @@ const LoadingScreen = ({ onComplete }) => {
             style={{ backgroundImage: `url("${GRAIN}")`, backgroundSize: '256px 256px' }}
           />
 
-          {/* ---- Spline 3D Scene Background ---- */}
-          <motion.div 
-            className="absolute inset-0 z-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: splineLoaded ? 0.75 : 0 }}
-            transition={{ duration: 1.5 }}
-          >
-            <Spline 
-              scene="https://prod.spline.design/wqZi1zWIwZIpnXEL/scene.splinecode" 
-              onLoad={() => setSplineLoaded(true)}
-            />
-          </motion.div>
+          {/* ---- Animated CSS Orbs (replaces Spline) ---- */}
+          <div className="absolute inset-0 z-0">
+            {ORBS.map((orb) => (
+              <motion.div
+                key={orb.id}
+                className="absolute rounded-full"
+                style={{
+                  width: orb.size,
+                  height: orb.size,
+                  left: orb.x,
+                  top: orb.y,
+                  translateX: orb.tx,
+                  translateY: orb.ty,
+                  background: `radial-gradient(ellipse at 35% 35%, ${orb.colors[0]}, ${orb.colors[1]} 50%, ${orb.colors[2]} 100%)`,
+                  filter: `blur(${orb.blur}px)`,
+                  opacity: 0.75,
+                }}
+                animate={{
+                  scale: [1, 1.06, 0.97, 1.04, 1],
+                  x: [0, 12, -8, 6, 0],
+                  y: [0, -10, 8, -4, 0],
+                  rotate: [0, 8, -5, 3, 0],
+                }}
+                transition={{
+                  duration: orb.duration,
+                  delay: orb.delay,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+            ))}
+          </div>
 
           {/* ---- Center Typography (Serif Style) ---- */}
           <motion.div
@@ -132,7 +116,7 @@ const LoadingScreen = ({ onComplete }) => {
               Hello!<br />I'm Abhishek Kumar
             </h1>
             <p className="text-[10px] md:text-xs text-neutral-400 font-bold tracking-[0.25em] uppercase">
-              Photographer, Video Editor & Colorist
+              Photographer, Video Editor &amp; Colorist
             </p>
           </motion.div>
 
