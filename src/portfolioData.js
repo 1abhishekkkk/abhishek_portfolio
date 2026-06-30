@@ -156,7 +156,7 @@ export const portfolioConfig = {
         {
           id: "fuse-3",
           title: "Fuse Bangalore",
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628645/reels/fuse-bangalore.mp4",
+          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782807723/reels/fuse-bangalore.mp4",
           thumbnail: "/thumbnails/fuse-bangalore.jpg",
           desc: "Bangalore edition of the brand's signature creative series",
           duration: "1:00",
@@ -175,7 +175,7 @@ export const portfolioConfig = {
         {
           id: "duroflex-1",
           title: "Shreyanka x Duroflex",
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777739610/reels/shreyanka-x-duroflex.mp4",
+          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782807887/reels/shreyanka-x-duroflex.mp4",
           thumbnail: "/thumbnails/duroflex.jpg",
           desc: "Premium collaboration featuring Shreyanka Patil for Duroflex",
           duration: "0:45",
@@ -225,7 +225,7 @@ export const portfolioConfig = {
       id: 10,
       title: "Ishan Kishan - Cricket Edit",
       category: "video",
-      videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1780988936/reels/ishan-kishan.mp4",
+      videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782807757/reels/ishan-kishan.mp4",
       desc: "Dynamic cricket edit featuring Ishan Kishan with high-energy transitions",
       duration: "0:30",
       tags: ["Sports", "Cricket", "Dynamic Edit"],
