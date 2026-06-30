@@ -1,6 +1,41 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- ===================== Spline DOM Debugger ===================== -->
+    <script>
+      setInterval(() => {
+        const findElements = (root, path = 'body') => {
+          if (!root) return;
+          
+          if (root.querySelectorAll) {
+            // Log all anchor tags
+            root.querySelectorAll('a').forEach((el) => {
+              console.log(`[DEBUG-LINK] Path: ${path} -> A | href: ${el.href} | className: ${el.className} | OuterHTML: ${el.outerHTML.substring(0, 300)}`);
+            });
+            // Log all SVG tags and their parent elements
+            root.querySelectorAll('svg').forEach((el) => {
+              const parent = el.parentNode;
+              console.log(`[DEBUG-SVG] Path: ${path} -> SVG | parentNode: ${parent ? parent.tagName : 'null'}#${parent ? parent.id : ''}.${parent ? parent.className : ''}`);
+            });
+          }
+
+          if (root.shadowRoot) {
+            findElements(root.shadowRoot, `${path} -> shadowRoot`);
+          }
+
+          const children = root.children || root.childNodes;
+          if (children) {
+            for (let i = 0; i < children.length; i++) {
+              findElements(children[i], `${path} -> ${children[i].tagName || 'node'}`);
+            }
+          }
+        };
+
+        findElements(document.body);
+      }, 2000);
+    </script>
+
+    <!-- ===================== Spline Logo Override ===================== -->
     <script>
       (function() {
         const originalAttachShadow = Element.prototype.attachShadow;
