@@ -1,17 +1,24 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ─── PLACEHOLDER IMAGES ───────────────────────────────────────────────────────
-// Replace with your actual photography URLs when ready
+// ─── SHOWREEL THUMBNAILS ──────────────────────────────────────────────────────
+// Auto-extracted from Cloudinary videos using f_jpg + so_ (seek offset) transform
+const BASE = "https://res.cloudinary.com/de6kkxnqn/video/upload";
+const thumb = (version, id, seek = 1) =>
+  `${BASE}/so_${seek},w_420,h_590,c_fill,f_jpg,q_85/${version}/${id}.jpg`;
+
 const PHOTO_IMAGES = [
-  "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&h=700&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?w=500&h=700&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1521119989659-a83eee488004?w=500&h=700&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1504703395950-b89145a5425b?w=500&h=700&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=500&h=700&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&h=700&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=500&h=700&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1495216875107-c6c043eb703f?w=500&h=700&fit=crop&q=80",
+  thumb("v1777628884", "reels/realme-11pro",          1),
+  thumb("v1777628901", "reels/realme-15pro-launch",   2),
+  thumb("v1777628896", "reels/realme-15pro-launch-new", 3),
+  thumb("v1777628685", "reels/fuse-brand-edit",       1),
+  thumb("v1777628710", "reels/fuse-bts-final",        2),
+  thumb("v1777628645", "reels/fuse-bangalore",        1),
+  thumb("v1777739610", "reels/shreyanka-x-duroflex",  2),
+  thumb("v1777628879", "reels/oneplus-final",         1),
+  thumb("v1777628375", "reels/fashion-gurav",         1),
+  thumb("v1777628714", "reels/honor-brand",           2),
+  thumb("v1780988936", "reels/ishan-kishan",          1),
 ];
 
 const CARD_W = 190;
