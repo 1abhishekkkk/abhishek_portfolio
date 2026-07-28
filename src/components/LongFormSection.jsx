@@ -9,19 +9,19 @@ const LongFormSection = () => {
   const videos = [
     {
       id: 1,
-      src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628812/reels/muscleblaze.mp4",
+      src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/muscleblaze.mp4",
       title: "MuscleBlaze Campaign",
       description: "Brand commercial for MuscleBlaze"
     },
     {
       id: 2,
-      src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628879/reels/oneplus-final.mp4",
+      src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/oneplus-final.mp4",
       title: "OnePlus Campaign",
       description: "A cinematic journey showcasing the flagship features"
     },
     {
       id: 3,
-      src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628772/reels/montage-trailer.mp4",
+      src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/montage-trailer.mp4",
       title: "Montage Trailer",
       description: "An epic compilation of creative moments"
     },

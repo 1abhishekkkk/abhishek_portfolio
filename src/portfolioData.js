@@ -92,7 +92,7 @@ export const portfolioConfig = {
         {
           id: "realme-1",
           title: "Realme 11 Pro Campaign",
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628884/reels/realme-11pro.mp4",
+          videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/realme-11pro.mp4",
           thumbnail: "/thumbnails/realme-11pro.jpg", // Add if available
           desc: "Professional product showcase highlighting camera capabilities and design aesthetics",
           duration: "0:45",
@@ -103,7 +103,7 @@ export const portfolioConfig = {
         {
           id: "realme-2", 
           title: "Realme 15 Pro Launch Video",
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628901/reels/realme-15pro-launch.mp4",
+          videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/realme-15pro-launch.mp4",
           thumbnail: "/thumbnails/realme-15pro.jpg",
           desc: "Dynamic launch campaign video showcasing premium features and capabilities",
           duration: "0:50",
@@ -114,7 +114,7 @@ export const portfolioConfig = {
         {
           id: "realme-3",
           title: "Realme 15 Pro - Extended Cut",
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628896/reels/realme-15pro-launch-new.mp4", 
+          videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/realme-15pro-launch-new.mp4", 
           thumbnail: "/thumbnails/realme-15pro-new.jpg",
           desc: "Extended version with detailed feature highlights and lifestyle integration",
           duration: "1:15",
@@ -134,7 +134,7 @@ export const portfolioConfig = {
         {
           id: "fuse-1",
           title: "Fuse Brand Edit",
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628685/reels/fuse-brand-edit.mp4",
+          videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-brand-edit.mp4",
           thumbnail: "/thumbnails/fuse-brand.jpg",
           desc: "Creative brand storytelling with dynamic editing and visual effects",
           duration: "0:35",
@@ -145,7 +145,7 @@ export const portfolioConfig = {
         {
           id: "fuse-2",
           title: "Fuse BTS Final Cut", 
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628710/reels/fuse-bts-final.mp4",
+          videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-bts-final.mp4",
           thumbnail: "/thumbnails/fuse-bts.jpg",
           desc: "Behind-the-scenes footage showcasing the creative process and team collaboration",
           duration: "1:20",
@@ -156,7 +156,7 @@ export const portfolioConfig = {
         {
           id: "fuse-3",
           title: "Fuse Bangalore",
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782807723/reels/fuse-bangalore.mp4",
+          videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-bangalore.mp4",
           thumbnail: "/thumbnails/fuse-bangalore.jpg",
           desc: "Bangalore edition of the brand's signature creative series",
           duration: "1:00",
@@ -175,7 +175,7 @@ export const portfolioConfig = {
         {
           id: "duroflex-1",
           title: "Shreyanka x Duroflex",
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782807887/reels/shreyanka-x-duroflex.mp4",
+          videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/shreyanka-x-duroflex.mp4",
           thumbnail: "/thumbnails/duroflex.jpg",
           desc: "Premium collaboration featuring Shreyanka Patil for Duroflex",
           duration: "0:45",
@@ -196,7 +196,7 @@ export const portfolioConfig = {
         {
           id: "oneplus-1",
           title: "OnePlus Campaign Coming Soon",
-          videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628879/reels/oneplus-final.mp4", // Update with your actual filename
+          videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/oneplus-final.mp4", // Update with your actual filename
           thumbnail: "/thumbnails/oneplus-thumb1.jpg",
           desc: "Professional OnePlus campaign video showcasing premium design and performance",
           duration: "0:40",
@@ -225,7 +225,7 @@ export const portfolioConfig = {
       id: 10,
       title: "Ishan Kishan - Cricket Edit",
       category: "video",
-      videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782807757/reels/ishan-kishan.mp4",
+      videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/ishan-kishan.mp4",
       desc: "Dynamic cricket edit featuring Ishan Kishan with high-energy transitions",
       duration: "0:30",
       tags: ["Sports", "Cricket", "Dynamic Edit"],
@@ -235,7 +235,7 @@ export const portfolioConfig = {
       id: 1,
       title: "Fashion Gurav Reel",
       category: "video", 
-      videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628375/reels/fashion-gurav.mp4",
+      videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fashion-gurav.mp4",
       thumbnail: "/thumbnails/fashion-gurav.jpg",
       desc: "High-energy fashion reel with dynamic editing and color grading",
       duration: "0:30",
@@ -246,7 +246,7 @@ export const portfolioConfig = {
       id: 2,
       title: "Honor Brand Campaign",
       category: "video",
-      videoSrc: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1777628714/reels/honor-brand.mp4", 
+      videoSrc: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/honor-brand.mp4", 
       thumbnail: "/thumbnails/honor-brand.jpg",
       desc: "Professional brand campaign video for Honor smartphone series",
       duration: "0:45",
