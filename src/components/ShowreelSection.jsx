@@ -62,7 +62,7 @@ const ALL_REELS = [
   },
   {
     id: 16,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782737648/reels/fuse-violet-t.mp4",
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-violet-t.mp4",
     title: "FUSE Violet T",
     brand: "fuse",
     type: "Product Showcase",
@@ -90,7 +90,7 @@ const ALL_REELS = [
   },
   {
     id: 20,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782738601/reels/fuse-white-t.mp4",
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-white-t.mp4",
     title: "FUSE White T",
     brand: "fuse",
     type: "Product Showcase",
