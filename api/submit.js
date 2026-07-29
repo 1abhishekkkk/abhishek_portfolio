@@ -127,8 +127,8 @@ export default async function handler(req, res) {
       [name, email, message]
     );
 
-    // Send email notification (fire-and-forget, doesn't block response)
-    sendEmailNotification(name, email, message);
+    // Send email notification (awaited so serverless function doesn't terminate early)
+    await sendEmailNotification(name, email, message);
 
     // Update rate limit store after successful insert
     rateLimitStore.set(ip, Date.now());
