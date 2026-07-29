@@ -83,7 +83,7 @@ const ALL_REELS = [
   },
   {
     id: 19,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782738585/reels/fuse-beetle-t.mp4",
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-beetle-t.mp4",
     title: "FUSE Beetle T",
     brand: "fuse",
     type: "Product Showcase",
