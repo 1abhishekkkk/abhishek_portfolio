@@ -19,6 +19,7 @@ const LoadingScreen = React.lazy(() => import('./components/LoadingScreen'));
 const TestimonialsSection = React.lazy(() => import('./components/TestimonialsSection'));
 const WorkProcessSection = React.lazy(() => import('./components/WorkProcessSection'));
 const PhotographySection = React.lazy(() => import('./components/PhotographySection'));
+const AdminModal = React.lazy(() => import('./components/AdminModal'));
 
 const BrandProofSection = () => (
   <section className="py-24 px-6 bg-neutral-950 border-y border-white/5">
@@ -137,6 +138,22 @@ const App = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [aiError, setAiError] = useState(null);
   const [showLoader, setShowLoader] = useState(true);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+
+  // Secret admin shortcut (Cmd+Shift+A or Ctrl+Shift+A or ?admin=true in URL)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        setIsAdminOpen((prev) => !prev);
+      }
+    };
+    if (window.location.search.includes('admin=true')) {
+      setIsAdminOpen(true);
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Lock scroll during loading screen
   useEffect(() => {
@@ -644,7 +661,15 @@ const App = () => {
               </a>
             </div>
             
-            <div className="text-[10px] font-bold text-neutral-600 tracking-widest uppercase">
+            <div 
+              className="text-[10px] font-bold text-neutral-600 tracking-widest uppercase cursor-default select-none hover:text-neutral-500 transition-colors"
+              onClick={(e) => {
+                if (e.detail === 3) {
+                  setIsAdminOpen(true);
+                }
+              }}
+              title="Tip: Triple click for admin"
+            >
               &copy; {new Date().getFullYear()} {portfolioConfig?.personal?.fullName}. All rights reserved.
             </div>
           </div>
@@ -654,6 +679,11 @@ const App = () => {
       {/* Floating Avatar */}
       <Suspense fallback={null}>
         <FloatingAvatar />
+      </Suspense>
+
+      {/* Secret Admin Dashboard Modal */}
+      <Suspense fallback={null}>
+        <AdminModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
       </Suspense>
 
       {/* Toast Notifications */}
