@@ -55,7 +55,7 @@ const ALL_REELS = [
   },
   {
     id: 15,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782737535/reels/fuse-black-t.mp4",
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-black-t.mp4",
     title: "FUSE Black T",
     brand: "fuse",
     type: "Product Showcase",
@@ -69,14 +69,14 @@ const ALL_REELS = [
   },
   {
     id: 17,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782737677/reels/fuse-tiger-t.mp4",
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-tiger-t.mp4",
     title: "FUSE Tiger T",
     brand: "fuse",
     type: "Product Showcase",
   },
   {
     id: 18,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782738541/reels/fuse-dragon-t.mp4",
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-dragon-t.mp4",
     title: "FUSE Dragon T",
     brand: "fuse",
     type: "Product Showcase",
