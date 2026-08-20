@@ -1,13 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { X, Lock, RefreshCw, Mail, Check, LogOut, ShieldAlert, Inbox, User, Clock } from 'lucide-react';
+import { X, Lock, RefreshCw, Mail, Check, LogOut, ShieldAlert, Inbox, User, Clock, Video, Upload, Film, Sparkles, Terminal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminModal({ isOpen, onClose }) {
   const [password, setPassword] = useState('');
   const [token, setToken] = useState(() => sessionStorage.getItem('admin_token') || '');
   const [contacts, setContacts] = useState([]);
+  const [activeTab, setActiveTab] = useState('reels'); // 'inquiries' | 'reels'
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Quick Reel Upload Assistant State
+  const [reelTitle, setReelTitle] = useState('');
+  const [reelBrand, setReelBrand] = useState('fuse');
+  const [reelType, setReelType] = useState('Brand Commercial');
+  const [reelPath, setReelPath] = useState('');
+  const [copiedCmd, setCopiedCmd] = useState(false);
+
+  const generatedCmd = `node upload_reel.js "${reelPath || '/path/to/your-video.mp4'}" "${reelTitle || 'My New Reel'}" "${reelBrand}" "${reelType}"`;
+
+  const handleCopyCmd = () => {
+    navigator.clipboard.writeText(generatedCmd);
+    setCopiedCmd(true);
+    setTimeout(() => setCopiedCmd(false), 2000);
+  };
 
   const fetchContacts = async (authToken) => {
     setLoading(true);
@@ -75,7 +91,7 @@ export default function AdminModal({ isOpen, onClose }) {
                 <h2 className="text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
                   Studio Admin <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">Secret Access</span>
                 </h2>
-                <p className="text-xs text-neutral-400 font-medium">Manage portfolio contact inquiries</p>
+                <p className="text-xs text-neutral-400 font-medium">Manage portfolio content & contact inquiries</p>
               </div>
             </div>
 
@@ -107,6 +123,35 @@ export default function AdminModal({ isOpen, onClose }) {
               </button>
             </div>
           </div>
+
+          {/* Subheader Navigation Tabs */}
+          {token && (
+            <div className="flex items-center gap-2 px-6 py-3 bg-black/40 border-b border-white/5">
+              <button
+                onClick={() => setActiveTab('reels')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+                  activeTab === 'reels'
+                    ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
+                    : 'bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                <Film className="w-4 h-4" />
+                Reel Upload & Manager
+              </button>
+
+              <button
+                onClick={() => setActiveTab('inquiries')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+                  activeTab === 'inquiries'
+                    ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
+                    : 'bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                <Inbox className="w-4 h-4" />
+                Inquiries ({contacts.length})
+              </button>
+            </div>
+          )}
 
           {/* Body */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -148,6 +193,91 @@ export default function AdminModal({ isOpen, onClose }) {
                     {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Unlock Admin Dashboard'}
                   </button>
                 </form>
+              </div>
+            ) : activeTab === 'reels' ? (
+              /* Reel Manager & Upload View */
+              <div className="space-y-6">
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 via-neutral-900 to-black border border-amber-500/30 space-y-4">
+                  <div className="flex items-center gap-3 text-amber-400">
+                    <Sparkles className="w-6 h-6" />
+                    <h3 className="text-lg font-black uppercase tracking-tight text-white">Reel Upload Helper</h3>
+                  </div>
+                  <p className="text-sm text-neutral-300 leading-relaxed">
+                    Upload any local <code className="text-amber-400 bg-black/50 px-2 py-0.5 rounded">.mp4</code> video file directly to high-speed Cloudflare R2 CDN and automatically add it to your website's Showreel grid!
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1">Local Video File Path</label>
+                      <input
+                        type="text"
+                        value={reelPath}
+                        onChange={(e) => setReelPath(e.target.value)}
+                        placeholder="/Users/abhishekkumar/Desktop/my-reel.mp4"
+                        className="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-amber-500 font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1">Reel Title</label>
+                      <input
+                        type="text"
+                        value={reelTitle}
+                        onChange={(e) => setReelTitle(e.target.value)}
+                        placeholder="e.g. Realme 16 Launch Edit"
+                        className="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1">Brand Category</label>
+                      <select
+                        value={reelBrand}
+                        onChange={(e) => setReelBrand(e.target.value)}
+                        className="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500"
+                      >
+                        <option value="fuse">Fuse</option>
+                        <option value="realme">Realme</option>
+                        <option value="oneplus">OnePlus</option>
+                        <option value="duroflex">Duroflex</option>
+                        <option value="honor">Honor</option>
+                        <option value="denovoo">Denovoo</option>
+                        <option value="sports">Sports</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="mono">Mono</option>
+                        <option value="custom">Custom Brand</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1">Content Type Tag</label>
+                      <input
+                        type="text"
+                        value={reelType}
+                        onChange={(e) => setReelType(e.target.value)}
+                        placeholder="e.g. Brand Commercial, Launch Edit"
+                        className="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Terminal CLI Command output box */}
+                  <div className="pt-2">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1 flex items-center gap-1.5">
+                      <Terminal className="w-3.5 h-3.5 text-amber-500" /> CLI Command Execution
+                    </label>
+                    <div className="flex items-center gap-2 bg-black/80 p-3 rounded-xl border border-white/10">
+                      <code className="flex-1 text-xs text-amber-400 font-mono truncate">{generatedCmd}</code>
+                      <button
+                        onClick={handleCopyCmd}
+                        className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black font-bold text-xs transition-all flex items-center gap-1 border border-amber-500/30 shrink-0"
+                      >
+                        {copiedCmd ? <Check className="w-3.5 h-3.5" /> : <Upload className="w-3.5 h-3.5" />}
+                        {copiedCmd ? 'Copied!' : 'Copy Command'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             ) : (
               /* Contacts List View */
@@ -210,3 +340,4 @@ export default function AdminModal({ isOpen, onClose }) {
     </AnimatePresence>
   );
 }
+

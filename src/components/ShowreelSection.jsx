@@ -5,6 +5,46 @@ import { Play } from 'lucide-react';
 // Full unified reels dataset with brand/category tags
 const ALL_REELS = [
   {
+    id: 25,
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/titan-x-flipcart.mp4",
+    title: "Titan x Flipkart Commercial",
+    brand: "titan",
+    type: "Brand Commercial",
+  },
+
+  {
+    id: 24,
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/delhi-heights-first-draft.mp4",
+    title: "Delhi Heights Brand Edit",
+    brand: "custom",
+    type: "Brand Edit",
+  },
+
+  {
+    id: 23,
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/blr-teasure-montage.mp4",
+    title: "Bangalore Teaser Montage",
+    brand: "fuse",
+    type: "Teaser Montage",
+  },
+
+  {
+    id: 22,
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/realme-gt-8-pro_1.mp4",
+    title: "Realme GT 8 Pro Campaign",
+    brand: "realme",
+    type: "Launch Campaign",
+  },
+
+  {
+    id: 21,
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/cricket-reel.mp4",
+    title: "Cricket Showcase Edit",
+    brand: "sports",
+    type: "Sports Edit",
+  },
+
+  {
     id: 0,
     src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-2-render.mp4",
     title: "Fuse Bangalore 2 Render",
@@ -165,6 +205,8 @@ const FILTERS = [
   { id: "sports",   label: "Sports",   color: "#34d399", count: ALL_REELS.filter(r => r.brand === "sports").length },
   { id: "fashion",  label: "Fashion",  color: "#f472b6", count: ALL_REELS.filter(r => r.brand === "fashion").length },
   { id: "mono",     label: "Mono",     color: "#94a3b8", count: ALL_REELS.filter(r => r.brand === "mono").length },
+  { id: "custom", label: "Custom", color: "#f59e0b", count: ALL_REELS.filter(r => r.brand === "custom").length },
+  { id: "titan", label: "Titan", color: "#a855f7", count: ALL_REELS.filter(r => r.brand === "titan").length },
 ];
 
 // ---------- Reel Card ----------
