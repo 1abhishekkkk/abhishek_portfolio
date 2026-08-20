@@ -13,38 +13,6 @@ const ALL_REELS = [
   },
 
   {
-    id: 24,
-    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/delhi-heights-first-draft.mp4",
-    title: "Delhi Heights Brand Edit",
-    brand: "custom",
-    type: "Brand Edit",
-  },
-
-  {
-    id: 23,
-    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/blr-teasure-montage.mp4",
-    title: "Bangalore Teaser Montage",
-    brand: "fuse",
-    type: "Teaser Montage",
-  },
-
-  {
-    id: 22,
-    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/realme-gt-8-pro_1.mp4",
-    title: "Realme GT 8 Pro Campaign",
-    brand: "realme",
-    type: "Launch Campaign",
-  },
-
-  {
-    id: 21,
-    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/cricket-reel.mp4",
-    title: "Cricket Showcase Edit",
-    brand: "sports",
-    type: "Sports Edit",
-  },
-
-  {
     id: 0,
     src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-2-render.mp4",
     title: "Fuse Bangalore 2 Render",
