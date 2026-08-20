@@ -55,13 +55,6 @@ const ALL_REELS = [
     type: "Brand Commercial",
   },
   {
-    id: 12,
-    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-brand-edit.mp4",
-    title: "Fuse Brand Edit",
-    brand: "fuse",
-    type: "Brand Content",
-  },
-  {
     id: 15,
     src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/fuse-black-t.mp4",
     title: "FUSE Black T",
