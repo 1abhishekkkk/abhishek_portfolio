@@ -9,27 +9,27 @@ const LongFormSection = () => {
   const videos = [
     {
       id: 1,
+      src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/nykaaland-aftermovie.mp4",
+      title: "Nykaa Land Aftermovie",
+      description: "High-energy festival aftermovie and brand experience for Nykaa Land"
+    },
+    {
+      id: 2,
       src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/muscleblaze.mp4",
       title: "MuscleBlaze Campaign",
       description: "Brand commercial for MuscleBlaze"
     },
     {
-      id: 2,
+      id: 3,
       src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/oneplus-final.mp4",
       title: "OnePlus Campaign",
       description: "A cinematic journey showcasing the flagship features"
     },
     {
-      id: 3,
+      id: 4,
       src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/montage-trailer.mp4",
       title: "Montage Trailer",
       description: "An epic compilation of creative moments"
-    },
-    {
-      id: 4,
-      src: "https://res.cloudinary.com/de6kkxnqn/video/upload/v1782728701/reels/denovoo-longform.mp4",
-      title: "Denovoo Broadway",
-      description: "Extended cinematic brand edit for Denovoo Broadway campaign"
     }
   ];
 

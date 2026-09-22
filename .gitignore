@@ -27,6 +27,8 @@ public/reels/
 *.mp4
 public/reels/*.mp4
 video_backups_high_res/
+r2_compressed/
+r2_downloads/
 acli.exe
 .vercel/
 .vercel

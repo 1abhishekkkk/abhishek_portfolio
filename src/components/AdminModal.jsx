@@ -44,7 +44,7 @@ export default function AdminModal({ isOpen, onClose }) {
           setToken('');
         }
       }
-    } catch (err) {
+    } catch {
       setError('Network error connecting to database');
     } finally {
       setLoading(false);

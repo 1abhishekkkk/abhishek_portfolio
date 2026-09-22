@@ -44,7 +44,7 @@ function updateShowreelSection(urlMap) {
   Object.entries(urlMap).forEach(([filename, url]) => {
     // Match src: "/reels/filename.mp4" pattern
     const baseName = path.parse(filename).name;
-    const regex = new RegExp(`src:\\s*["']\\/reels\\/[^"']*${baseName}[^"']*\.mp4["']`, 'g');
+    const regex = new RegExp(`src:\\s*["']\\/reels\\/[^"']*${baseName}[^"']*\\.mp4["']`, 'g');
     content = content.replace(regex, `src: "${url}"`);
   });
 

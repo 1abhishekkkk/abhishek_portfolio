@@ -5,6 +5,13 @@ import { Play } from 'lucide-react';
 // Full unified reels dataset with brand/category tags
 const ALL_REELS = [
   {
+    id: 26,
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/samsung-s26-fe-x-bachhu.mp4",
+    title: "Samsung S26 FE x Bachhu",
+    brand: "samsung",
+    type: "Gaming Campaign",
+  },
+  {
     id: 25,
     src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/titan-x-flipcart.mp4",
     title: "Titan x Flipkart Commercial",
@@ -140,14 +147,14 @@ const ALL_REELS = [
   },
   {
     id: 13,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/v1782728618/reels/denovoo-final.mp4",
-    title: "Denovoo Broadway Commercial",
-    brand: "denovoo",
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/muscleblaze.mp4",
+    title: "MuscleBlaze Commercial",
+    brand: "muscleblaze",
     type: "Brand Commercial",
   },
   {
     id: 14,
-    src: "https://res.cloudinary.com/de6kkxnqn/video/upload/f_auto,q_auto/v1782736694/reels/mono-podcast.mp4",
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/mono-podcast.mp4",
     title: "Mono Podcast",
     brand: "mono",
     type: "Podcast Edit",
@@ -156,18 +163,19 @@ const ALL_REELS = [
 
 // Filter tabs config with brand accent colors
 const FILTERS = [
-  { id: "all",      label: "All",      color: "#f59e0b", count: ALL_REELS.length },
-  { id: "realme",   label: "Realme",   color: "#FFD700", count: ALL_REELS.filter(r => r.brand === "realme").length },
-  { id: "fuse",     label: "Fuse",     color: "#FF6B35", count: ALL_REELS.filter(r => r.brand === "fuse").length },
-  { id: "duroflex", label: "Duroflex", color: "#3b9eff", count: ALL_REELS.filter(r => r.brand === "duroflex").length },
-  { id: "oneplus",  label: "OnePlus",  color: "#EB0028", count: ALL_REELS.filter(r => r.brand === "oneplus").length },
-  { id: "honor",    label: "Honor",    color: "#c084fc", count: ALL_REELS.filter(r => r.brand === "honor").length },
-  { id: "denovoo",  label: "Denovoo",  color: "#60a5fa", count: ALL_REELS.filter(r => r.brand === "denovoo").length },
-  { id: "sports",   label: "Sports",   color: "#34d399", count: ALL_REELS.filter(r => r.brand === "sports").length },
-  { id: "fashion",  label: "Fashion",  color: "#f472b6", count: ALL_REELS.filter(r => r.brand === "fashion").length },
-  { id: "mono",     label: "Mono",     color: "#94a3b8", count: ALL_REELS.filter(r => r.brand === "mono").length },
-  { id: "custom", label: "Custom", color: "#f59e0b", count: ALL_REELS.filter(r => r.brand === "custom").length },
-  { id: "titan", label: "Titan", color: "#a855f7", count: ALL_REELS.filter(r => r.brand === "titan").length },
+  { id: "all",         label: "All",         color: "#f59e0b", count: ALL_REELS.length },
+  { id: "realme",      label: "Realme",      color: "#FFD700", count: ALL_REELS.filter(r => r.brand === "realme").length },
+  { id: "fuse",        label: "Fuse",        color: "#FF6B35", count: ALL_REELS.filter(r => r.brand === "fuse").length },
+  { id: "duroflex",    label: "Duroflex",    color: "#3b9eff", count: ALL_REELS.filter(r => r.brand === "duroflex").length },
+  { id: "oneplus",     label: "OnePlus",     color: "#EB0028", count: ALL_REELS.filter(r => r.brand === "oneplus").length },
+  { id: "honor",       label: "Honor",       color: "#c084fc", count: ALL_REELS.filter(r => r.brand === "honor").length },
+  { id: "muscleblaze", label: "MuscleBlaze", color: "#f97316", count: ALL_REELS.filter(r => r.brand === "muscleblaze").length },
+  { id: "sports",      label: "Sports",      color: "#34d399", count: ALL_REELS.filter(r => r.brand === "sports").length },
+  { id: "fashion",     label: "Fashion",     color: "#f472b6", count: ALL_REELS.filter(r => r.brand === "fashion").length },
+  { id: "mono",        label: "Mono",        color: "#94a3b8", count: ALL_REELS.filter(r => r.brand === "mono").length },
+  { id: "custom",      label: "Custom",      color: "#f59e0b", count: ALL_REELS.filter(r => r.brand === "custom").length },
+  { id: "titan",       label: "Titan",       color: "#a855f7", count: ALL_REELS.filter(r => r.brand === "titan").length },
+  { id: "samsung",     label: "Samsung",     color: "#3b82f6", count: ALL_REELS.filter(r => r.brand === "samsung").length },
 ];
 
 // ---------- Reel Card ----------

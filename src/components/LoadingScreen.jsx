@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const GRAIN = `data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E`;
 
@@ -129,27 +129,10 @@ export default function LoadingScreen({ onComplete }) {
   const [phase, setPhase] = useState(0); // 0=loading, 1=ready
   const containerRef = useRef(null);
 
-  // Mouse parallax
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 40, damping: 20 });
-  const springY = useSpring(mouseY, { stiffness: 40, damping: 20 });
-
   useEffect(() => {
     const timer = setTimeout(() => setPhase(1), 400);
     return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    const handleMove = (e) => {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      mouseX.set((e.clientX - cx) / cx);
-      mouseY.set((e.clientY - cy) / cy);
-    };
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
-  }, [mouseX, mouseY]);
 
   const handleEnter = () => {
     setIsExiting(true);
@@ -201,7 +184,7 @@ export default function LoadingScreen({ onComplete }) {
             delay={0}
             duration={7}
           >
-            <motion.div style={{ x: springX.get ? undefined : 0, rotateY: 15 }}>
+            <motion.div style={{ rotateY: 15 }}>
               <ChromeBlob size={130} />
             </motion.div>
           </FloatingObject>
