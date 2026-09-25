@@ -271,7 +271,7 @@ const App = () => {
         {/* Hero Section */}
         <main>
           <section id="hero" className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-            <VideoBackground src="https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/anshika-montage.mp4" />
+            <VideoBackground src="https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/montage-hero-section.mp4" />
             
             <div className="text-center z-20 mt-12">
               <div className="sans-minimal mb-6 text-amber-500 opacity-80 animate-fade-in-up">
