@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import VideoBackground from './components/VideoBackground';
 import { portfolioConfig, services } from './portfolioData';
 import Toasts from './components/Toasts';
+import { generateCreativeVision } from './utils/creativeVisionGenerator';
 
 const ParticleBackground = React.lazy(() => import('./ParticleBackground'));
 const FloatingAvatar = React.lazy(() => import('./Avatar3D').then(m => ({ default: m.FloatingAvatar })));
@@ -189,19 +190,14 @@ const App = () => {
     setVisionResult(null);
 
     try {
-      const res = await fetch('/api/gemini', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: visionInput })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data?.error || 'AI request failed');
+      const data = await generateCreativeVision(visionInput);
+      if (!data) {
+        throw new Error('Generation failed');
       }
       setVisionResult(data);
     } catch (error) {
       console.error("AI Generation Error:", error);
-      setAiError(error.message || "Could not generate vision. Please try again.");
+      setAiError("Could not generate vision. Please try again.");
     } finally {
       setIsGenerating(false);
     }
@@ -465,6 +461,24 @@ const App = () => {
                       placeholder="E.g., 'A futuristic cyberpunk cityscape at night with neon lights'"
                       className="w-full h-40 bg-black/30 border border-white/10 rounded-xl p-6 text-white placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent transition-all resize-none text-lg font-light"
                     />
+                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                      <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider">Try:</span>
+                      {[
+                        "Cyberpunk Tokyo at night with neon reflections",
+                        "Luxury watch commercial with water droplets and gold accents",
+                        "Vintage 70s analog road trip on 35mm film",
+                        "High-energy athletic commercial with explosive cuts"
+                      ].map((preset) => (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => setVisionInput(preset)}
+                          className="text-[11px] px-3 py-1 rounded-full bg-white/5 hover:bg-amber-500/20 hover:text-amber-400 text-neutral-400 border border-white/10 transition-all text-left"
+                        >
+                          {preset.slice(0, 32)}...
+                        </button>
+                      ))}
+                    </div>
                   </div>
                   
                   <button

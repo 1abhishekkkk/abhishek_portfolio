@@ -5,6 +5,13 @@ import { Play } from 'lucide-react';
 // Full unified reels dataset with brand/category tags
 const ALL_REELS = [
   {
+    id: 27,
+    src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/chasmir-reel.mp4",
+    title: "Chasmir Reel",
+    brand: "chasmir",
+    type: "Brand Reel",
+  },
+  {
     id: 26,
     src: "https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/reels/samsung-s26-fe-x-bachhu.mp4",
     title: "Samsung S26 FE x Bachhu",
@@ -176,6 +183,7 @@ const FILTERS = [
   { id: "custom",      label: "Custom",      color: "#f59e0b", count: ALL_REELS.filter(r => r.brand === "custom").length },
   { id: "titan",       label: "Titan",       color: "#a855f7", count: ALL_REELS.filter(r => r.brand === "titan").length },
   { id: "samsung",     label: "Samsung",     color: "#3b82f6", count: ALL_REELS.filter(r => r.brand === "samsung").length },
+  { id: "chasmir",     label: "Chasmir",     color: "#e11d48", count: ALL_REELS.filter(r => r.brand === "chasmir").length },
 ];
 
 // ---------- Reel Card ----------

@@ -12,6 +12,7 @@ dist-ssr
 .vscode/*
 .idea
 .DS_Store
+*.code-workspace
 
 # Environment
 .env
