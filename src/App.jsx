@@ -9,8 +9,6 @@ import { portfolioConfig, services } from './portfolioData';
 import Toasts from './components/Toasts';
 import { generateCreativeVision } from './utils/creativeVisionGenerator';
 
-const ParticleBackground = React.lazy(() => import('./ParticleBackground'));
-const FloatingAvatar = React.lazy(() => import('./Avatar3D').then(m => ({ default: m.FloatingAvatar })));
 const ShowreelSection = React.lazy(() => import('./components/ShowreelSection'));
 const LongFormSection = React.lazy(() => import('./components/LongFormSection'));
 const ColorGradingSection = React.lazy(() => import('./components/ColorGradingSection'));
@@ -213,11 +211,6 @@ const App = () => {
           </Suspense>
         )}
       </AnimatePresence>
-      {/* Global Particle Background */}
-      <Suspense fallback={null}>
-        <ParticleBackground />
-      </Suspense>
-      
       {/* Main Content */}
       <div className="relative z-10">
         {/* Navigation */}
@@ -689,11 +682,6 @@ const App = () => {
           </div>
         </footer>
       </div>
-
-      {/* Floating Avatar */}
-      <Suspense fallback={null}>
-        <FloatingAvatar />
-      </Suspense>
 
       {/* Secret Admin Dashboard Modal */}
       <Suspense fallback={null}>

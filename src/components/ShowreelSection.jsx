@@ -217,17 +217,18 @@ const ReelCard = ({ reel, onOpenModal }) => {
     return () => observer.disconnect();
   }, []);
 
-  // Play when visible, pause when scrolled out of view to save 100% bandwidth & CPU
+  // Performance: Play on hover on desktop (or in view on mobile/touch) to prevent GPU choke
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !hasEnteredView) return;
 
-    if (isInView) {
+    const isTouch = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches;
+    if (isHovered || (isTouch && isInView)) {
       video.play().catch(() => {});
     } else {
       video.pause();
     }
-  }, [isInView, hasEnteredView]);
+  }, [isHovered, isInView, hasEnteredView]);
 
   return (
     <motion.div
@@ -255,7 +256,8 @@ const ReelCard = ({ reel, onOpenModal }) => {
             preload="metadata"
             onLoadedData={() => {
               setVideoLoaded(true);
-              if (isInView && videoRef.current) {
+              const isTouch = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches;
+              if ((isHovered || isTouch) && videoRef.current) {
                 videoRef.current.play().catch(() => {});
               }
             }}
