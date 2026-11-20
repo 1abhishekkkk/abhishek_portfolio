@@ -188,15 +188,50 @@ const FILTERS = [
 
 // ---------- Reel Card ----------
 const ReelCard = ({ reel, onOpenModal }) => {
+  const cardRef = useRef(null);
   const videoRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [hasEnteredView, setHasEnteredView] = useState(false);
+  const [isInView, setIsInView] = useState(false);
 
   const brandFilter = FILTERS.find(f => f.id === reel.brand);
   const accentColor = brandFilter?.color || '#f59e0b';
 
+  // Smart Viewport Lazy Loading: only fetch and play videos when visible on screen
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setHasEnteredView(true);
+        }
+      },
+      { rootMargin: '200px 0px', threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Play when visible, pause when scrolled out of view to save 100% bandwidth & CPU
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !hasEnteredView) return;
+
+    if (isInView) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [isInView, hasEnteredView]);
+
   return (
     <motion.div
+      ref={cardRef}
       className="relative w-full aspect-[9/16] rounded-2xl overflow-hidden bg-neutral-900 border border-white/5 cursor-pointer group shadow-2xl"
       style={{
         borderColor: isHovered ? accentColor : 'rgba(255,255,255,0.05)',
@@ -210,23 +245,26 @@ const ReelCard = ({ reel, onOpenModal }) => {
       layout
     >
       <div className="relative w-full h-full bg-black">
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover pointer-events-none"
-          loop
-          muted
-          playsInline
-          autoPlay
-          preload="metadata"
-          onLoadedData={(e) => {
-            setVideoLoaded(true);
-            e.target.play().catch(err => console.log('Autoplay blocked:', err));
-          }}
-          src={reel.src}
-        />
+        {hasEnteredView && (
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover pointer-events-none"
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            onLoadedData={() => {
+              setVideoLoaded(true);
+              if (isInView && videoRef.current) {
+                videoRef.current.play().catch(() => {});
+              }
+            }}
+            src={reel.src}
+          />
+        )}
 
         {/* Loading Placeholder */}
-        {!videoLoaded && (
+        {(!hasEnteredView || !videoLoaded) && (
           <div className="absolute inset-0 bg-neutral-900 flex items-center justify-center">
             <div className="w-6 h-6 border-2 border-white/25 border-t-white/85 rounded-full animate-spin" />
           </div>

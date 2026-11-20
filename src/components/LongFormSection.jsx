@@ -67,13 +67,48 @@ const LongFormSection = () => {
 
   // Video card component
   const VideoCard = ({ video }) => {
+    const cardRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
+    const [hasEnteredView, setHasEnteredView] = useState(false);
+    const [isInView, setIsInView] = useState(false);
     const videoRef = useRef(null);
+
+    // Smart Viewport Lazy Loading for Long Form
+    useEffect(() => {
+      const el = cardRef.current;
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsInView(entry.isIntersecting);
+          if (entry.isIntersecting) {
+            setHasEnteredView(true);
+          }
+        },
+        { rootMargin: '200px 0px', threshold: 0.15 }
+      );
+
+      observer.observe(el);
+      return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+      const vid = videoRef.current;
+      if (!vid || !hasEnteredView) return;
+
+      if (isInView) {
+        vid.play().then(() => setIsPlaying(true)).catch(() => {});
+      } else {
+        vid.pause();
+        setIsPlaying(false);
+      }
+    }, [isInView, hasEnteredView]);
 
     const togglePlay = (e) => {
       e.stopPropagation();
       const vid = videoRef.current;
+      if (!vid) return;
       if (vid.paused) {
         vid.play();
         setIsPlaying(true);
@@ -86,8 +121,9 @@ const LongFormSection = () => {
     const toggleMute = (e) => {
       e.stopPropagation();
       const vid = videoRef.current;
+      if (!vid) return;
       vid.muted = !vid.muted;
-      setIsMuted(!vid.muted);
+      setIsMuted(vid.muted);
     };
 
     const handleVideoClick = () => {
@@ -95,21 +131,28 @@ const LongFormSection = () => {
     };
 
     return (
-      <div className="relative group rounded-xl overflow-hidden shadow-2xl bg-black">
-        <video
-          ref={videoRef}
-          src={video.src}
-          className="w-full aspect-video object-cover cursor-pointer"
-          loop
-          playsInline
-          muted
-          autoPlay
-          onClick={handleVideoClick}
-          onLoadedData={(e) => {
-            e.target.play();
-            setIsPlaying(true);
-          }}
-        />
+      <div ref={cardRef} className="relative group rounded-xl overflow-hidden shadow-2xl bg-black">
+        {hasEnteredView ? (
+          <video
+            ref={videoRef}
+            src={video.src}
+            className="w-full aspect-video object-cover cursor-pointer"
+            loop
+            playsInline
+            muted
+            preload="metadata"
+            onClick={handleVideoClick}
+            onLoadedData={() => {
+              if (isInView && videoRef.current) {
+                videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+              }
+            }}
+          />
+        ) : (
+          <div className="w-full aspect-video bg-neutral-900 flex items-center justify-center">
+            <div className="w-8 h-8 border-2 border-white/20 border-t-white/80 rounded-full animate-spin" />
+          </div>
+        )}
         
         {/* Play/Pause Overlay */}
         {!isPlaying && (
