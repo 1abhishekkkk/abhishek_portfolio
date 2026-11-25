@@ -80,9 +80,10 @@ export default function BackgroundSong({
       <button
         type="button"
         onClick={() => setMuted((m) => !m)}
-        className="fixed top-5 left-1/2 -translate-x-1/2 z-[60] cursor-pointer rounded-full border border-white/15 bg-black/80 backdrop-blur-md px-3.5 py-2 font-mono text-[10px] tracking-widest text-[#f59e0b] uppercase hover:border-[#f59e0b]/60 transition-colors"
+        className="fixed top-6 right-20 md:top-5 md:right-auto md:left-1/2 md:-translate-x-1/2 z-[60] cursor-pointer rounded-full border border-white/15 bg-black/80 backdrop-blur-md px-3 py-1.5 md:px-3.5 md:py-2 font-mono text-[10px] tracking-widest text-[#f59e0b] uppercase hover:border-[#f59e0b]/60 transition-colors"
       >
-        {muted ? "🔇 Sound Off" : "🔊 Sound On"}
+        <span className="md:hidden">{muted ? "🔇" : "🔊"}</span>
+        <span className="hidden md:inline">{muted ? "🔇 Sound Off" : "🔊 Sound On"}</span>
       </button>
     </>
   );

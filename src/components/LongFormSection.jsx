@@ -271,17 +271,44 @@ const LongFormSection = () => {
               onClick={() => openModal(video)}
               onPointerEnter={() => handleRowEnter(video)}
               onPointerLeave={handleRowLeave}
-              className="group flex w-full cursor-pointer items-center justify-between py-6 text-left transition-colors"
+              className="group flex w-full cursor-pointer flex-col md:flex-row md:items-center md:justify-between gap-4 py-6 text-left transition-colors"
             >
-              <span className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter uppercase text-white transition-all duration-200 group-hover:translate-x-3 group-hover:text-amber-500 leading-[0.95]">
-                {video.title}
-              </span>
-              <span className="ml-4 flex items-center gap-3 shrink-0 font-mono text-[11px] text-neutral-500 group-hover:text-neutral-300 transition-colors">
-                <span className="hidden sm:inline">{video.meta}</span>
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white group-hover:border-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-all">
-                  <Play className="w-3.5 h-3.5 ml-0.5" fill="currentColor" />
+              {/* Mobile Inline Video Thumbnail Card (visible on phone/tablet where hover doesn't exist) */}
+              <div
+                style={{ backgroundColor: video.bg }}
+                className="md:hidden w-full rounded-2xl border border-white/20 p-2 shadow-xl overflow-hidden"
+              >
+                <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
+                  <video
+                    src={`${video.src}#t=1`}
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between font-mono text-[9px] tracking-widest uppercase font-bold">
+                    <span className="rounded-full bg-black/75 px-2.5 py-0.5 text-amber-400 backdrop-blur-sm">
+                      {video.tag}
+                    </span>
+                    <span className="rounded-full bg-black/75 px-2.5 py-0.5 text-white backdrop-blur-sm">
+                      ▶ WATCH 4K
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex w-full items-center justify-between">
+                <span className="text-2xl sm:text-5xl md:text-6xl font-black tracking-tighter uppercase text-white transition-all duration-200 group-hover:translate-x-3 group-hover:text-amber-500 leading-[0.95]">
+                  {video.title}
                 </span>
-              </span>
+                <span className="ml-4 flex items-center gap-3 shrink-0 font-mono text-[11px] text-neutral-500 group-hover:text-neutral-300 transition-colors">
+                  <span className="hidden sm:inline">{video.meta}</span>
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white group-hover:border-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                    <Play className="w-3.5 h-3.5 ml-0.5" fill="currentColor" />
+                  </span>
+                </span>
+              </div>
             </button>
           ))}
         </div>
