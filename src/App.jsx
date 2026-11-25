@@ -7,7 +7,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import VideoBackground from './components/VideoBackground';
 import { portfolioConfig, services } from './portfolioData';
 import Toasts from './components/Toasts';
-import { generateCreativeVision } from './utils/creativeVisionGenerator';
+import { useLenisGsap } from './lib/motionSetup';
+
+const PackagesMotionShell = React.lazy(() => import('./components/PackagesMotionShell'));
+const TseilyMotionLayer = React.lazy(() => import('./components/TseilyMotionLayer'));
+const FaqSection = React.lazy(() => import('./components/FaqSection'));
+const FooterSection = React.lazy(() => import('./components/FooterSection'));
+const BackgroundSong = React.lazy(() => import('./components/BackgroundSong'));
 
 const ShowreelSection = React.lazy(() => import('./components/ShowreelSection'));
 const LongFormSection = React.lazy(() => import('./components/LongFormSection'));
@@ -18,6 +24,8 @@ const LoadingScreen = React.lazy(() => import('./components/LoadingScreen'));
 const TestimonialsSection = React.lazy(() => import('./components/TestimonialsSection'));
 const WorkProcessSection = React.lazy(() => import('./components/WorkProcessSection'));
 const PhotographySection = React.lazy(() => import('./components/PhotographySection'));
+const CaseStudiesSection = React.lazy(() => import('./components/CaseStudiesSection'));
+const ContactSection = React.lazy(() => import('./components/ContactSection'));
 const AdminModal = React.lazy(() => import('./components/AdminModal'));
 
 const BrandProofSection = () => (
@@ -47,95 +55,55 @@ const BrandProofSection = () => (
   </section>
 );
 
-const CaseStudiesSection = () => (
-  <section id="case-studies" className="py-32 px-6 bg-neutral-950">
-    <div className="max-w-[1400px] mx-auto">
-      <div className="text-center mb-16">
-        <div className="sans-minimal text-amber-500 mb-4 font-black tracking-widest uppercase">Case Studies</div>
-        <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase text-white">Proof, not just pretty cuts</h2>
-      </div>
-
-      <div className="grid lg:grid-cols-3 gap-6">
-        {portfolioConfig.caseStudies.map((study) => (
-          <article key={study.title} className="rounded-[2rem] border border-white/5 bg-white/[0.03] p-8 flex flex-col min-h-[520px] hover:border-amber-500/20 transition-all">
-            <div className="flex items-center justify-between gap-4 mb-10">
-              <span className="text-[10px] font-black tracking-[0.3em] text-amber-500 uppercase">{study.client}</span>
-              <span className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-amber-500" />
-              </span>
-            </div>
-
-            <h3 className="text-3xl font-black tracking-tighter uppercase mb-6 text-white">{study.title}</h3>
-            <div className="space-y-5 text-white/60 font-medium leading-relaxed">
-              <p><span className="text-white font-black">Goal:</span> {study.goal}</p>
-              <p><span className="text-white font-black">Role:</span> {study.role}</p>
-              <p><span className="text-white font-black">Output:</span> {study.output}</p>
-            </div>
-
-            <div className="mt-auto pt-8">
-              <p className="text-amber-500 font-bold mb-5 tracking-tight">{study.result}</p>
-              <div className="flex flex-wrap gap-2">
-                {study.tags.map((tag) => (
-                  <span key={tag} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/40">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-);
-
 const ServicePackagesSection = ({ onContact }) => (
-  <section id="packages" className="py-32 px-6 bg-neutral-950">
-    <div className="max-w-[1400px] mx-auto">
-      <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-16">
-        <div>
-          <div className="sans-minimal text-amber-500 mb-4 font-black tracking-widest uppercase">Packages</div>
-          <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] text-white">
-            Clear ways <br /> to start
-          </h2>
-        </div>
-        <button
-          onClick={onContact}
-          className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-amber-500 text-black text-xs font-black uppercase tracking-widest hover:bg-white transition-all"
-        >
-          Discuss a project <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
-
-      <div className="grid lg:grid-cols-3 gap-6">
-        {portfolioConfig.servicePackages.map((pack) => (
-          <div key={pack.title} className="rounded-[2rem] border border-white/5 bg-white/[0.03] p-8 hover:bg-white/[0.05] transition-all">
-            <h3 className="text-3xl font-black tracking-tighter uppercase mb-4 text-white">{pack.title}</h3>
-            <p className="text-white/50 font-medium mb-8 leading-relaxed italic text-sm">"{pack.bestFor}"</p>
-            <div className="space-y-4">
-              {pack.deliverables.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Sparkles className="w-3 h-3 text-amber-500" />
-                  </div>
-                  <span className="font-semibold text-white/70 text-sm tracking-tight">{item}</span>
-                </div>
-              ))}
+  <Suspense fallback={null}>
+    <PackagesMotionShell>
+      <section id="packages" className="py-16 px-6">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-16">
+            <div>
+              <div data-pkg-reveal className="sans-minimal text-amber-500 mb-4 font-black tracking-widest uppercase">Packages</div>
+              <h2 data-pkg-reveal className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] text-white">
+                Clear ways <br /> to start
+              </h2>
             </div>
+            <button
+              data-pkg-reveal
+              onClick={onContact}
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-amber-500 text-black text-xs font-black uppercase tracking-widest hover:bg-white transition-all"
+            >
+              Discuss a project <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
-        ))}
-      </div>
-    </div>
-  </section>
+
+          <div className="grid lg:grid-cols-3 gap-6">
+            {portfolioConfig.servicePackages.map((pack) => (
+              <div key={pack.title} data-pkg-card className="rounded-[2rem] border border-white/5 bg-white/[0.03] p-8 hover:bg-white/[0.05] transition-colors">
+                <h3 className="text-3xl font-black tracking-tighter uppercase mb-4 text-white">{pack.title}</h3>
+                <p className="text-white/50 font-medium mb-8 leading-relaxed italic text-sm">"{pack.bestFor}"</p>
+                <div className="space-y-4">
+                  {pack.deliverables.map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Sparkles className="w-3 h-3 text-amber-500" />
+                      </div>
+                      <span className="font-semibold text-white/70 text-sm tracking-tight">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </PackagesMotionShell>
+  </Suspense>
 );
 
 const App = () => {
+  useLenisGsap();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [visionInput, setVisionInput] = useState('');
-  const [visionResult, setVisionResult] = useState(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [aiError, setAiError] = useState(null);
   const [showLoader, setShowLoader] = useState(true);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
@@ -160,6 +128,12 @@ const App = () => {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      // Refresh GSAP ScrollTrigger positions once loader exits
+      requestAnimationFrame(() => {
+        import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+          ScrollTrigger.refresh();
+        });
+      });
     }
     return () => { document.body.style.overflow = ''; };
   }, [showLoader]);
@@ -181,26 +155,6 @@ const App = () => {
     }
   };
 
-  const generateVision = async () => {
-    if (!visionInput.trim()) return;
-    setIsGenerating(true);
-    setAiError(null);
-    setVisionResult(null);
-
-    try {
-      const data = await generateCreativeVision(visionInput);
-      if (!data) {
-        throw new Error('Generation failed');
-      }
-      setVisionResult(data);
-    } catch (error) {
-      console.error("AI Generation Error:", error);
-      setAiError("Could not generate vision. Please try again.");
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   return (
     <div className="relative min-h-screen bg-neutral-950 text-white font-sans selection:bg-amber-500 selection:text-black">
       {/* Cinematic Loading Screen */}
@@ -215,8 +169,8 @@ const App = () => {
       <div className="relative z-10">
         {/* Navigation */}
         <nav className={`fixed w-full z-50 transition-all duration-700 ${
-          scrolled 
-            ? 'bg-black/40 backdrop-blur-xl border-b border-white/5 py-4' 
+          scrolled
+            ? 'bg-black/40 backdrop-blur-xl border-b border-white/5 py-4'
             : 'bg-transparent py-8'
         }`}>
           <div className="max-w-[1800px] mx-auto px-8 md:px-12 flex justify-between items-center">
@@ -356,15 +310,12 @@ const App = () => {
                     <span className="serif-italic lowercase text-white/40">visual</span> storytelling
                   </motion.h2>
                   
-                  <motion.p 
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 0.6 }}
-                    viewport={{ once: true }}
+                  <p 
+                    data-word-reveal
                     className="text-xl md:text-2xl text-white/80 font-light leading-relaxed mb-12 max-w-2xl"
                   >
                     {portfolioConfig?.personal?.description}
-                  </motion.p>
+                  </p>
 
                   <div className="grid sm:grid-cols-2 gap-12 mt-8">
                     {services.map((service, index) => (
@@ -403,7 +354,9 @@ const App = () => {
             </Suspense>
           </section>
 
-          <CaseStudiesSection />
+          <Suspense fallback={null}>
+            <CaseStudiesSection caseStudies={portfolioConfig.caseStudies} />
+          </Suspense>
 
           {/* Testimonials Section */}
           <Suspense fallback={null}>
@@ -416,271 +369,43 @@ const App = () => {
           </Suspense>
 
           {/* Color Grading Section */}
-          <section id="color-grading" className="py-20 bg-neutral-950">
+          <section id="color-grading" className="bg-neutral-950">
             <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading color work...</div>}>
               <ColorGradingSection />
             </Suspense>
           </section>
 
           {/* Instagram Feed Section */}
-          <section id="instagram" className="py-20 bg-neutral-950">
-            <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading feed...</div>}>
-              <InstagramFeedLive />
-            </Suspense>
+          <section id="instagram" className="persp-stage py-4 bg-neutral-950">
+            <div data-tseily-flip className="will-change-transform">
+              <Suspense fallback={<div className="h-96 flex items-center justify-center text-white/20">Loading feed...</div>}>
+                <InstagramFeedLive />
+              </Suspense>
+            </div>
           </section>
 
           <ServicePackagesSection onContact={() => scrollToSection('contact')} />
 
-          {/* AI Vision Section */}
-          <section id="ai-vision" className="py-24 px-6 bg-neutral-950">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-sm text-amber-500 mb-4 uppercase tracking-widest font-bold">
-                  <Sparkles size={14} /> AI-Powered
-                </div>
-                <h2 className="text-4xl md:text-6xl font-bold mb-4 uppercase tracking-tighter">Creative Vision Generator</h2>
-                <p className="text-neutral-400 max-w-2xl mx-auto text-lg">
-                  Describe your vision and let AI generate creative concepts, color palettes, and styling ideas.
-                </p>
-              </div>
-              
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-12 shadow-2xl">
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-[10px] font-bold text-neutral-500 mb-2 uppercase tracking-[0.2em]">Describe your vision</label>
-                    <textarea
-                      value={visionInput}
-                      onChange={(e) => setVisionInput(e.target.value)}
-                      placeholder="E.g., 'A futuristic cyberpunk cityscape at night with neon lights'"
-                      className="w-full h-40 bg-black/30 border border-white/10 rounded-xl p-6 text-white placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent transition-all resize-none text-lg font-light"
-                    />
-                    <div className="flex flex-wrap items-center gap-2 mt-3">
-                      <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider">Try:</span>
-                      {[
-                        "Cyberpunk Tokyo at night with neon reflections",
-                        "Luxury watch commercial with water droplets and gold accents",
-                        "Vintage 70s analog road trip on 35mm film",
-                        "High-energy athletic commercial with explosive cuts"
-                      ].map((preset) => (
-                        <button
-                          key={preset}
-                          type="button"
-                          onClick={() => setVisionInput(preset)}
-                          className="text-[11px] px-3 py-1 rounded-full bg-white/5 hover:bg-amber-500/20 hover:text-amber-400 text-neutral-400 border border-white/10 transition-all text-left"
-                        >
-                          {preset.slice(0, 32)}...
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <button
-                    onClick={generateVision}
-                    disabled={isGenerating || !visionInput.trim()}
-                    className="w-full py-5 bg-amber-500 text-black font-bold uppercase tracking-widest rounded-xl hover:bg-amber-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl shadow-amber-500/10"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
-                        Generating...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles size={18} />
-                        Generate Vision
-                      </>
-                    )}
-                  </button>
-                  
-                  {aiError && (
-                    <div className="text-red-400 text-sm text-center mt-2 uppercase font-bold tracking-tighter">{aiError}</div>
-                  )}
-                </div>
-                
-                {visionResult && (
-                  <div className="mt-12 border-t border-white/10 pt-12 animate-fade-in-up">
-                    <h3 className="text-3xl font-bold mb-4 uppercase tracking-tight">{visionResult.title}</h3>
-                    <p className="text-neutral-400 text-xl mb-10 italic">"{visionResult.logline}"</p>
-                    
-                    <div className="grid md:grid-cols-2 gap-10">
-                      <div>
-                        <h4 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4">Color Palette</h4>
-                        <div className="flex h-16 rounded-xl overflow-hidden border border-white/10">
-                          {visionResult.colorPalette.map((color, i) => (
-                            <div 
-                              key={i} 
-                              className="flex-1 group relative"
-                              style={{ backgroundColor: color }}
-                              title={color}
-                            >
-                              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
-                                {color}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4">Mood</h4>
-                        <div className="bg-black/30 border border-white/10 rounded-xl p-5">
-                          <p className="text-amber-500 font-medium tracking-wide">{visionResult.mood}</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-10">
-                      <h4 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4">Shot Ideas</h4>
-                      <ul className="grid gap-4">
-                        {visionResult.shotIdeas.map((idea, i) => (
-                          <li key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
-                            <div className="w-6 h-6 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
-                              {i + 1}
-                            </div>
-                            <p className="text-neutral-300 font-light">{idea}</p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className="mt-12 pt-8 border-t border-white/10 text-center">
-                      <button 
-                        onClick={() => scrollToSection('contact')}
-                        className="inline-flex items-center gap-2 text-amber-500 hover:text-white transition-colors group uppercase tracking-widest text-xs font-bold"
-                      >
-                        Let's Bring This to Life <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
+          {/* Q&A Accordion Section */}
+          <Suspense fallback={null}>
+            <FaqSection />
+          </Suspense>
 
           {/* Contact Section */}
-          <section id="contact" className="py-40 px-6 bg-neutral-950">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-20 items-center">
-                <div>
-                  <div className="sans-minimal text-amber-500 mb-8 font-bold tracking-[0.4em] uppercase">Get In Touch</div>
-                  <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-12 uppercase leading-[0.85]">
-                    Let's Build <br />
-                    Something <br />
-                    <span className="serif-italic lowercase text-white/30">epic</span>
-                  </h2>
-                  <p className="text-2xl text-white/60 font-light max-w-md mb-12 leading-relaxed">
-                    Have a vision? I have the tools and edit instincts to make it reality.
-                  </p>
-                  
-                  <div className="space-y-10">
-                    <div className="flex items-center gap-6 group">
-                      <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500 transition-all duration-500">
-                        <Mail className="w-6 h-6 group-hover:text-black" />
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-neutral-500 tracking-widest uppercase mb-1">Email</div>
-                        <a href={`mailto:${portfolioConfig?.personal?.email}`} className="text-xl md:text-2xl font-bold hover:text-amber-500 transition-colors">
-                          {portfolioConfig?.personal?.email}
-                        </a>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-6 group">
-                      <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500 transition-all duration-500">
-                        <Phone className="w-6 h-6 group-hover:text-black" />
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-neutral-500 tracking-widest uppercase mb-1">Phone</div>
-                        <div className="space-y-1">
-                          <a href={`tel:${portfolioConfig?.personal?.phone}`} className="text-xl md:text-2xl font-bold hover:text-amber-500 transition-colors block">
-                            {portfolioConfig?.personal?.phone}
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-white/[0.03] p-8 md:p-12 rounded-[2.5rem] border border-white/10 backdrop-blur-sm">
-                  <form className="space-y-6" onSubmit={async (e) => {
-                    e.preventDefault();
-                    const form = e.currentTarget;
-                    const formData = new FormData(form);
-                    const payload = {
-                      name: formData.get('name'),
-                      email: formData.get('email'),
-                      message: formData.get('message') || formData.get('subject') || ''
-                    };
-                    try {
-                      const res = await fetch('/api/submit', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                      });
-                      if (res.ok) {
-                        window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'success', message: 'Thanks! Your message was sent.' } }));
-                        form.reset();
-                      } else {
-                        const data = await res.json();
-                        window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: data?.error || 'Something went wrong.' } }));
-                      }
-                    } catch {
-                      window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: 'Network error. Please try again.' } }));
-                    }
-                  }}>
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-[10px] font-bold text-neutral-500 mb-2 uppercase tracking-widest">Name</label>
-                        <input name="name" type="text" required className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all" placeholder="YOUR NAME" />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-neutral-500 mb-2 uppercase tracking-widest">Email</label>
-                        <input name="email" type="email" required className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all" placeholder="EMAIL@EXAMPLE.COM" />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-neutral-500 mb-2 uppercase tracking-widest">Message</label>
-                      <textarea name="message" rows="6" required className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all resize-none" placeholder="TELL ME ABOUT YOUR PROJECT..."></textarea>
-                    </div>
-                    <button type="submit" className="w-full py-5 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-amber-500 transition-all shadow-xl shadow-white/5">
-                      Send Message
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </section>
+          <Suspense fallback={null}>
+            <ContactSection personal={portfolioConfig?.personal} />
+          </Suspense>
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-white/10 py-20 bg-neutral-950">
-          <div className="max-w-[1800px] mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-12">
-            <div className="text-2xl font-black tracking-tighter">
-              {portfolioConfig?.personal?.name.toUpperCase()} <span className="text-neutral-500 font-light">{portfolioConfig?.personal?.tagline.toUpperCase()}</span>
-            </div>
-            
-            <div className="flex gap-10 text-[10px] font-bold tracking-widest uppercase">
-              <a href={portfolioConfig?.social?.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors flex items-center gap-2">
-                <Instagram size={14} /> Instagram
-              </a>
-              <a href={portfolioConfig?.social?.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors flex items-center gap-2">
-                <Linkedin size={14} /> LinkedIn
-              </a>
-            </div>
-            
-            <div 
-              className="text-[10px] font-bold text-neutral-600 tracking-widest uppercase cursor-default select-none hover:text-neutral-500 transition-colors"
-              onClick={(e) => {
-                if (e.detail === 3) {
-                  setIsAdminOpen(true);
-                }
-              }}
-              title="Tip: Triple click for admin"
-            >
-              &copy; {new Date().getFullYear()} {portfolioConfig?.personal?.fullName}. All rights reserved.
-            </div>
-          </div>
-        </footer>
+        <Suspense fallback={null}>
+          <FooterSection
+            personal={portfolioConfig?.personal}
+            social={portfolioConfig?.social}
+            onAdminTrigger={() => setIsAdminOpen(true)}
+            onScrollTop={() => scrollToSection('hero')}
+          />
+        </Suspense>
       </div>
 
       {/* Secret Admin Dashboard Modal */}
@@ -690,6 +415,16 @@ const App = () => {
 
       {/* Toast Notifications */}
       <Toasts />
+
+      {/* Tseily Motion Layer: Cursor Dot + Section Rail + 3D Scroll Unfolds */}
+      <Suspense fallback={null}>
+        <TseilyMotionLayer onScrollTo={scrollToSection} />
+      </Suspense>
+
+      {/* Background Home Song */}
+      <Suspense fallback={null}>
+        <BackgroundSong src="https://pub-d726b2263a78468490bf2e0e10ecbe64.r2.dev/audio/song.m4a" />
+      </Suspense>
     </div>
   );
 };

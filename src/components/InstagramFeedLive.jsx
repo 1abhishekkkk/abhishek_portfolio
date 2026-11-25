@@ -1,165 +1,110 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Instagram, ExternalLink, Camera, Film, Star } from 'lucide-react';
+import React, { useRef } from 'react';
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useMotionTemplate,
+} from 'framer-motion';
 
 const instagramUsername = 'abhi_clicks._';
-const instagramUrl = `https://instagram.com/${instagramUsername}`;
+const instagramUrl = `https://www.instagram.com/${instagramUsername}/`;
 
-// Stat items
-const stats = [
-  { label: 'Posts', value: '198' },
-  { label: 'Followers', value: '1.4K' },
-  { label: 'Following', value: '1,097' },
-];
+const InstagramFeedLive = () => {
+  const cardRef = useRef(null);
 
+  // Normalized cursor coordinates (-0.5 to 0.5) & pixel spotlight coordinates
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const spotX = useMotionValue(50);
+  const spotY = useMotionValue(50);
 
-const InstagramFeedLive = () => (
-  <section className="py-24 px-6 bg-neutral-950 relative overflow-hidden">
-    {/* Subtle grid texture */}
-    <div
-      className="absolute inset-0 opacity-[0.025] pointer-events-none"
-      style={{
-        backgroundImage:
-          'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-        backgroundSize: '60px 60px',
-      }}
-    />
+  const springConfig = { stiffness: 260, damping: 22, mass: 0.6 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
 
-    {/* Instagram gradient orb */}
-    <div
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-[0.07] pointer-events-none"
-      style={{
-        background:
-          'radial-gradient(circle, #f97316, #ec4899, #8b5cf6)',
-      }}
-    />
+  // 3D tilt + subtle magnetic pull toward cursor
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [14, -14]);
+  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-16, 16]);
+  const translateX = useTransform(smoothX, [-0.5, 0.5], [-10, 10]);
+  const translateY = useTransform(smoothY, [-0.5, 0.5], [-8, 8]);
 
-    <div className="max-w-4xl mx-auto relative z-10">
-      {/* Header */}
-      <motion.div
-        className="text-center mb-12"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs font-black uppercase tracking-widest mb-5"
-          style={{
-            background: 'linear-gradient(135deg, rgba(249,115,22,0.15), rgba(236,72,153,0.15))',
-            borderColor: 'rgba(249,115,22,0.3)',
-            color: '#f97316',
-          }}
+  const spotlightBg = useMotionTemplate`radial-gradient(280px circle at ${spotX}% ${spotY}%, rgba(245, 158, 11, 0.16), transparent 70%)`;
+
+  const handlePointerMove = (e) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    mouseX.set(px - 0.5);
+    mouseY.set(py - 0.5);
+    spotX.set(px * 100);
+    spotY.set(py * 100);
+  };
+
+  const handlePointerLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+    spotX.set(50);
+    spotY.set(50);
+  };
+
+  return (
+    <section className="py-8 px-6 bg-neutral-950">
+      <div className="max-w-3xl mx-auto flex flex-col items-center text-center">
+        <motion.p
+          className="text-xs md:text-sm font-bold tracking-widest uppercase text-amber-500/90 mb-4"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45 }}
         >
-          <Instagram className="w-3.5 h-3.5" />
-          Live Feed
-        </div>
-        <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-4 text-white uppercase">
-          Follow the <span style={{
-            background: 'linear-gradient(90deg, #f97316, #ec4899)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}>Journey</span>
-        </h2>
-        <p className="text-white/40 font-medium text-lg max-w-xl mx-auto">
-          Behind-the-scenes, latest projects, and daily creative inspiration.
-        </p>
-      </motion.div>
+          @{instagramUsername} on Instagram
+        </motion.p>
 
-      {/* Main CTA card */}
-      <motion.div
-        className="relative rounded-3xl overflow-hidden border border-white/10"
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.15 }}
-      >
-        {/* Instagram gradient top bar */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: 'linear-gradient(90deg, #f97316, #ec4899, #8b5cf6)' }}
-        />
-
-        {/* Card body */}
-        <div className="bg-white/[0.03] backdrop-blur-sm px-8 md:px-14 py-14 flex flex-col items-center gap-10">
-          {/* IG avatar circle + handle */}
-          <motion.div
-            className="flex flex-col items-center gap-4"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.25, duration: 0.5 }}
-          >
-            {/* Gradient avatar ring */}
-            <div
-              className="w-24 h-24 rounded-full p-[3px]"
-              style={{ background: 'linear-gradient(135deg, #f97316, #ec4899, #8b5cf6)' }}
-            >
-              <div className="w-full h-full rounded-full bg-neutral-900 flex items-center justify-center">
-                <Instagram className="w-10 h-10 text-white/60" />
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-white font-black text-xl tracking-tight">@{instagramUsername}</div>
-              <div className="text-white/40 text-sm font-medium mt-0.5">Photographer · Editor · Colorist</div>
-            </div>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            className="flex items-center gap-0 divide-x divide-white/10 rounded-2xl border border-white/8 overflow-hidden"
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.35, duration: 0.5 }}
-          >
-            {stats.map((s) => (
-              <div key={s.label} className="px-8 py-5 text-center">
-                <div className="text-2xl font-black text-white tracking-tight">{s.value}</div>
-                <div className="text-[10px] font-black uppercase tracking-widest text-white/30 mt-0.5">{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* CTA Button */}
+        <div className="perspective-1200 w-full flex justify-center">
           <motion.a
+            ref={cardRef}
             href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 px-10 py-4 rounded-full font-black uppercase tracking-widest text-sm text-white transition-all"
-            style={{ background: 'linear-gradient(135deg, #f97316, #ec4899)' }}
-            whileHover={{ scale: 1.04, boxShadow: '0 0 40px rgba(249,115,22,0.4)' }}
-            whileTap={{ scale: 0.97 }}
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.45, duration: 0.5 }}
+            onPointerMove={handlePointerMove}
+            onPointerLeave={handlePointerLeave}
+            style={{
+              rotateX,
+              rotateY,
+              x: translateX,
+              y: translateY,
+              transformStyle: 'preserve-3d',
+            }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative w-full max-w-[400px] rounded-2xl border border-amber-500/40 bg-white/[0.02] px-8 py-7 md:py-8 transition-colors duration-300 hover:border-amber-500 hover:shadow-[0_18px_50px_rgba(245,158,11,0.16)] flex flex-col items-center justify-center overflow-hidden"
           >
-            <Instagram className="w-5 h-5" />
-            Follow on Instagram
-            <ExternalLink className="w-4 h-4 opacity-70" />
-          </motion.a>
+            {/* Cursor-following spotlight */}
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ background: spotlightBg }}
+            />
 
-          {/* Hashtag cloud */}
-          <motion.div
-            className="flex flex-wrap items-center justify-center gap-2"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.55, duration: 0.6 }}
-          >
-            {['#BrandFilms', '#ColorGrade', '#BTS', '#Realme', '#Fuse', '#CinematicEdit', '#VideoEditor', '#India'].map((tag) => (
-              <span
-                key={tag}
-                className="text-[10px] font-bold text-white/20 hover:text-white/50 transition-colors cursor-default"
-              >
-                {tag}
-              </span>
-            ))}
-          </motion.div>
+            <div
+              style={{ transform: 'translateZ(28px)' }}
+              className="relative z-10 text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter text-amber-500"
+            >
+              @{instagramUsername}
+            </div>
+            <span
+              style={{ transform: 'translateZ(18px)' }}
+              className="relative z-10 mt-3 text-xs font-medium tracking-wide text-white/55 group-hover:text-white/85 transition-colors"
+            >
+              Follow on Instagram
+            </span>
+          </motion.a>
         </div>
-      </motion.div>
-    </div>
-  </section>
-);
+      </div>
+    </section>
+  );
+};
 
 export default InstagramFeedLive;
